@@ -2,13 +2,13 @@
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Beer Tasting Note</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4efe5;color:#24211d;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}.app{max-width:760px;margin:auto;padding:22px 14px 90px}h1{margin:0;font-size:30px}.sub{color:#766e64;font-size:13px;margin:7px 0 22px}.card{background:#fffdf9;border:1px solid #ddd4c7;border-radius:20px;padding:18px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.start{background:white;border:1px solid #ddd4c7;border-radius:17px;padding:18px 10px;min-height:105px;text-align:left}.start b{display:block;font-size:16px;margin:8px 0}.muted{font-size:12px;color:#766e64}.hidden{display:none}.field{margin:12px 0}label{display:block;font-size:12px;color:#766e64;margin-bottom:6px}input,textarea{width:100%;padding:12px;border:1px solid #ddd4c7;border-radius:13px;font:inherit;background:#fff}textarea{min-height:90px}.btn{border:1px solid #ddd4c7;border-radius:14px;padding:12px 14px;background:white;font-weight:700}.primary{background:#24211d;color:#fff;border-color:#24211d}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #ddd4c7;border-radius:999px;padding:9px 12px;background:white}.chip.on{background:#24211d;color:white}.ref{background:#fff7e7;border:1px solid #e5c987;border-radius:14px;padding:12px;margin:12px 0}.photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;margin-top:10px}.row{display:flex;gap:8px;flex-wrap:wrap}.footer{position:fixed;bottom:0;left:0;right:0;background:#faf7f1ee;border-top:1px solid #ddd4c7;padding:10px}.footer>div{max-width:760px;margin:auto;display:flex;gap:10px}.footer button{flex:1}.preview{white-space:pre-wrap;background:#27231f;color:#fff;padding:15px;border-radius:14px;line-height:1.6}@media(max-width:560px){.grid{grid-template-columns:1fr}}
+*{box-sizing:border-box}body{margin:0;background:#f4efe5;color:#24211d;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}.app{max-width:760px;margin:auto;padding:22px 14px 90px}h1{margin:0;font-size:30px}.sub{color:#766e64;font-size:13px;margin:7px 0 22px}.card{background:#fffdf9;border:1px solid #ddd4c7;border-radius:20px;padding:18px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.start{background:white;border:1px solid #ddd4c7;border-radius:17px;padding:18px 10px;min-height:105px;text-align:left}.start b{display:block;font-size:16px;margin:8px 0}.muted{font-size:12px;color:#766e64}.hidden{display:none}.field{margin:12px 0}label{display:block;font-size:12px;color:#766e64;margin-bottom:6px}input,textarea{width:100%;padding:12px;border:1px solid #ddd4c7;border-radius:13px;font:inherit;background:#fff}textarea{min-height:90px}.btn{border:1px solid #ddd4c7;border-radius:14px;padding:12px 14px;background:white;font-weight:700}.primary{background:#24211d;color:#fff;border-color:#24211d}.chips{display:flex;flex-wrap:wrap;gap:8px}.sensoryGroup{border-top:1px dashed #ddd4c7;padding-top:12px;margin-top:14px}.sensoryGroup:first-child{border-top:0;margin-top:8px}.sensoryTitle{font-size:13px;font-weight:800;margin-bottom:8px;color:#5f5548}.chip{border:1px solid #ddd4c7;border-radius:999px;padding:9px 12px;background:white}.chip.on{background:#24211d;color:white}.ref{background:#fff7e7;border:1px solid #e5c987;border-radius:14px;padding:12px;margin:12px 0}.photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;margin-top:10px}.row{display:flex;gap:8px;flex-wrap:wrap}.footer{position:fixed;bottom:0;left:0;right:0;background:#faf7f1ee;border-top:1px solid #ddd4c7;padding:10px}.footer>div{max-width:760px;margin:auto;display:flex;gap:10px}.footer button{flex:1}.preview{white-space:pre-wrap;background:#27231f;color:#fff;padding:15px;border-radius:14px;line-height:1.6}@media(max-width:560px){.grid{grid-template-columns:1fr}}
 </style></head><body><div class="app">
 <div style="font-size:11px;letter-spacing:.12em;color:#9a8d7c">WANGAN BREWING</div><h1>Beer Tasting Note</h1><div class="sub">先入観なしで味わい、最後に銘柄と答え合わせ。</div>
 <section id="home" class="card"><h2>どうやって始めますか？</h2><div class="grid">
 <button class="start" onclick="mode('photo')">📷<b>ブラインドで開始</b><span class="muted">写真は保存だけ。銘柄は最後まで非表示</span></button>
-<button class="start" onclick="mode('search')">🔍<b>銘柄を検索</b><span class="muted">代表銘柄から自動入力</span></button>
-<button class="start" onclick="start()">✏️<b>手入力</b><span class="muted">自由に入力</span></button></div>
+
+<button class="start" onclick="start()">👃<b>写真なしで開始</b><span class="muted">銘柄を入力せずテイスティング</span></button></div>
 <div id="photo" class="hidden"><div class="field"><label>カメラで撮る</label><input id="camera" type="file" accept="image/*" capture="environment"></div><div class="field"><label>写真ライブラリから選ぶ</label><input id="library" type="file" accept="image/*"></div><img id="pic" class="photo hidden">
 <div class="ref"><b>ブラインドモード</b><br><span class="muted">写真の文字はまだ解析しません。先に自分が感じたアロマ／フレーバーを記録してください。</span></div><button id="photoGo" class="btn primary hidden" onclick="start()">この写真で開始</button></div>
 <div id="search" class="hidden"><div class="field"><label>銘柄</label><input id="q" placeholder="Saison, Orval, Urquell..." oninput="catalog()"></div><div id="results"></div></div>
@@ -23,9 +23,9 @@
 <div class="field"><label>ABV %</label><input id="abv" inputmode="decimal"></div>
 <div id="reference" class="ref hidden"></div>
 <div id="comparison" class="ref hidden"></div></div>
-<div class="card"><h2>アロマ</h2><div class="muted">感じたものを選択</div><div id="aroma" class="chips"></div></div>
-<div class="card"><h2>フレーバー</h2><div id="flavor" class="chips"></div></div>
-<div class="card"><h2>バランス・口当たり</h2><div class="field"><label>ボディ</label><div id="body" class="chips"></div></div><div class="field"><label>炭酸</label><div id="carb" class="chips"></div></div><div class="field"><label>メモ</label><textarea id="memo"></textarea></div></div>
+<div class="card"><h2>アロマ</h2><div class="muted">香りの由来を意識しながら選択</div><div id="aromaGroups"></div></div>
+<div class="card"><h2>フレーバー</h2><div class="muted">口中で感じる香味を由来別に選択</div><div id="flavorGroups"></div></div>
+<div class="card"><h2>バランス・口当たり</h2><div class="field"><label>ボディ</label><div id="body" class="chips"></div></div><div class="field"><label>炭酸</label><div id="carb" class="chips"></div></div><div class="field"><label>アルコールの温感</label><div id="warmth" class="chips"></div></div><div class="field"><label>メモ</label><textarea id="memo"></textarea></div></div>
 <div class="card"><h2>テイスティングノート</h2><div id="preview" class="preview">入力するとここに表示されます。</div><div class="row" style="margin-top:12px"><button class="btn primary" onclick="revealBeer()">銘柄を確認・答え合わせ</button><button class="btn" onclick="save()">保存</button><button class="btn" onclick="makePreview()">更新</button></div></div>
 </section></div>
 <div class="footer"><div><button class="btn" onclick="location.reload()">新規</button><button class="btn primary" onclick="makePreview()">ノート生成</button></div></div>
@@ -37,12 +37,38 @@ const beers=[
 {name:"Weihenstephaner Hefeweissbier",brewery:"Weihenstephan",style:"Weissbier",abv:"5.4",aroma:["バナナ","クローブ","パン"],flavor:["バナナ","クローブ","パン"]},
 {name:"Orval",brewery:"Brasserie d’Orval",style:"Belgian Pale Ale / Brett",abv:"6.2",aroma:["胡椒","柑橘","ハーブ","ブレット","土"],flavor:["ドライ","柑橘","ハーブ","ブレット"]},
 {name:"Duchesse de Bourgogne",brewery:"Brouwerij Verhaeghe",style:"Flanders Red Ale",abv:"6.2",aroma:["チェリー","プラム","樽","バニラ","酢酸"],flavor:["チェリー","赤果実","樽","ワイン様","酢酸"]}];
-const aromas=["パン","穀物","トースト","キャラメル","蜂蜜","花","草","ハーブ","松","樹脂","柑橘","レモン","グレープフルーツ","オレンジ","マンゴー","トロピカル","バナナ","洋梨","りんご","桃","クローブ","胡椒","ブレット","土","チェリー","プラム","樽","バニラ","乳酸","酢酸"];
-const flavors=["パン","穀物","トースト","カラメル","チョコレート","ハーブ","草","松","樹脂","柑橘","レモン","グレープフルーツ","オレンジ","トロピカル","バナナ","洋梨","クローブ","胡椒","ブレット","ドライ","甘味","苦味","乳酸","酢酸","赤果実","チェリー","プラム","樽","バニラ","ワイン様"];
-let selected={aroma:[],flavor:[],body:[],carb:[]},photo="";
+const aromaGroups={
+"モルト由来":["穀物","パン","クラッカー","ビスケット","トースト","キャラメル","蜂蜜","ナッツ","チョコレート","コーヒー","ロースト"],
+"ホップ由来":["花","草","ハーブ","松","樹脂","柑橘","レモン","グレープフルーツ","オレンジ","白ぶどう","マンゴー","パッションフルーツ","トロピカル"],
+"発酵由来":["バナナ","洋梨","りんご","桃","アプリコット","クローブ","胡椒","スパイシー","硫黄"],
+"熟成・微生物由来":["ブレット","土","馬小屋","チェリー","プラム","レーズン","乳酸","酢酸"],
+"樽・その他":["樽","バニラ","ココナッツ","スモーク","アルコール","ミネラル"]
+};
+const flavorGroups={
+"モルト由来":["穀物","パン","クラッカー","ビスケット","トースト","キャラメル","蜂蜜","ナッツ","チョコレート","コーヒー","ロースト"],
+"ホップ由来":["花","草","ハーブ","松","樹脂","柑橘","レモン","グレープフルーツ","オレンジ","白ぶどう","マンゴー","パッションフルーツ","トロピカル","苦味"],
+"発酵由来":["バナナ","洋梨","りんご","桃","クローブ","胡椒","スパイシー","ドライ"],
+"熟成・微生物由来":["ブレット","土","乳酸","酢酸","赤果実","チェリー","プラム","レーズン","ワイン様"],
+"樽・その他":["樽","バニラ","ココナッツ","スモーク","甘味","酸味"]
+};
+let selected={aroma:[],flavor:[],body:[],carb:[],warmth:[]},photo="";
 function mode(m){document.getElementById(m).classList.remove("hidden");if(m==="search")catalog()}
 function start(){home.classList.add("hidden");form.classList.remove("hidden");window.scrollTo(0,0)}
 function chips(id,arr,key,single=false){let e=document.getElementById(id);e.innerHTML=arr.map(x=>'<button class="chip" type="button">'+x+'</button>').join("");[...e.children].forEach(b=>b.onclick=()=>{if(single){selected[key]=[b.textContent];[...e.children].forEach(x=>x.classList.toggle("on",x===b))}else{b.classList.toggle("on");selected[key]=[...e.querySelectorAll(".on")].map(x=>x.textContent)};makePreview()})}
+function groupedChips(targetId,groups,key){
+  const wrap=document.getElementById(targetId);wrap.innerHTML="";
+  Object.entries(groups).forEach(([group,items])=>{
+    const sec=document.createElement("div");sec.className="sensoryGroup";
+    sec.innerHTML='<div class="sensoryTitle">'+group+'</div><div class="chips"></div>';
+    const box=sec.querySelector(".chips");
+    items.forEach(item=>{
+      const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=item;
+      b.onclick=()=>{b.classList.toggle("on");selected[key]=[...wrap.querySelectorAll(".chip.on")].map(x=>x.textContent);makePreview()};
+      box.appendChild(b);
+    });
+    wrap.appendChild(sec);
+  });
+}
 function catalog(){let s=(q.value||"").toLowerCase();let a=beers.filter(b=>!s||JSON.stringify(b).toLowerCase().includes(s));results.innerHTML=a.map((b,i)=>'<button class="btn" style="width:100%;margin:4px 0;text-align:left" onclick="pick(\''+b.name.replaceAll("'","\\'")+'\')"><b>'+b.name+'</b><br><span class="muted">'+b.brewery+' / '+b.style+' / '+b.abv+'%</span></button>').join("")}
 function pick(n){let b=beers.find(x=>x.name===n);name.value=b.name;brewery.value=b.brewery;style.value=b.style;abv.value=b.abv;reference.classList.remove("hidden");reference.innerHTML="<b>教科書的に期待される要素</b><br>アロマ："+b.aroma.join("、")+"<br>フレーバー："+b.flavor.join("、");start()}
 function normalize(s){return (s||"").toLowerCase().replace(/[^a-z0-9ぁ-んァ-ヶ一-龠]/g,"")}
@@ -126,7 +152,11 @@ function file(e){
   r.readAsDataURL(f)
 }
 camera.onchange=file;library.onchange=file;
-function makePreview(){preview.textContent="【"+(name.value||"名称未入力")+"】\n"+[brewery.value,style.value].filter(Boolean).join(" / ")+"\nABV："+(abv.value||"-")+"%\n\nアロマ："+(selected.aroma.join("、")||"未記録")+"\nフレーバー："+(selected.flavor.join("、")||"未記録")+"\nボディ："+(selected.body[0]||"-")+" / 炭酸："+(selected.carb[0]||"-")+"\n"+(memo.value?"メモ："+memo.value:"")}
+function makePreview(){preview.textContent="【"+(name.value||"名称未入力")+"】\n"+[brewery.value,style.value].filter(Boolean).join(" / ")+"\nABV："+(abv.value||"-")+"%\n\nアロマ："+(selected.aroma.join("、")||"未記録")+"\nフレーバー："+(selected.flavor.join("、")||"未記録")+"\nボディ："+(selected.body[0]||"-")+" / 炭酸："+(selected.carb[0]||"-")+" / アルコール温感："+(selected.warmth[0]||"-")+"\n"+(memo.value?"メモ："+memo.value:"")}
 function save(){makePreview();let x=JSON.parse(localStorage.getItem("beerNotes")||"[]");x.unshift({date:new Date().toISOString(),name:name.value,brewery:brewery.value,style:style.value,abv:abv.value,selected,memo:memo.value,photo,preview:preview.textContent});try{localStorage.setItem("beerNotes",JSON.stringify(x.slice(0,50)));alert("保存しました")}catch(e){alert("写真容量が大きく保存できませんでした。ノート本文は利用できます。")}}
-chips("aroma",aromas,"aroma");chips("flavor",flavors,"flavor");chips("body",["ライト","ミディアムライト","ミディアム","ミディアムフル","フル"],"body",true);chips("carb",["弱い","やや弱い","中程度","やや強い","強い"],"carb",true);
+groupedChips("aromaGroups",aromaGroups,"aroma");
+groupedChips("flavorGroups",flavorGroups,"flavor");
+chips("body",["ライト","ミディアムライト","ミディアム","ミディアムフル","フル"],"body",true);
+chips("carb",["弱い","やや弱い","中程度","やや強い","強い"],"carb",true);
+chips("warmth",["感じない","弱い","中程度","強い","非常に強い"],"warmth",true);
 </script></body></html>
