@@ -4,22 +4,29 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4efe5;color:#24211d;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}.app{max-width:760px;margin:auto;padding:22px 14px 90px}h1{margin:0;font-size:30px}.sub{color:#766e64;font-size:13px;margin:7px 0 22px}.card{background:#fffdf9;border:1px solid #ddd4c7;border-radius:20px;padding:18px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.start{background:white;border:1px solid #ddd4c7;border-radius:17px;padding:18px 10px;min-height:105px;text-align:left}.start b{display:block;font-size:16px;margin:8px 0}.muted{font-size:12px;color:#766e64}.hidden{display:none}.field{margin:12px 0}label{display:block;font-size:12px;color:#766e64;margin-bottom:6px}input,textarea{width:100%;padding:12px;border:1px solid #ddd4c7;border-radius:13px;font:inherit;background:#fff}textarea{min-height:90px}.btn{border:1px solid #ddd4c7;border-radius:14px;padding:12px 14px;background:white;font-weight:700}.primary{background:#24211d;color:#fff;border-color:#24211d}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #ddd4c7;border-radius:999px;padding:9px 12px;background:white}.chip.on{background:#24211d;color:white}.ref{background:#fff7e7;border:1px solid #e5c987;border-radius:14px;padding:12px;margin:12px 0}.photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;margin-top:10px}.row{display:flex;gap:8px;flex-wrap:wrap}.footer{position:fixed;bottom:0;left:0;right:0;background:#faf7f1ee;border-top:1px solid #ddd4c7;padding:10px}.footer>div{max-width:760px;margin:auto;display:flex;gap:10px}.footer button{flex:1}.preview{white-space:pre-wrap;background:#27231f;color:#fff;padding:15px;border-radius:14px;line-height:1.6}@media(max-width:560px){.grid{grid-template-columns:1fr}}
 </style></head><body><div class="app">
-<div style="font-size:11px;letter-spacing:.12em;color:#9a8d7c">WANGAN BREWING</div><h1>Beer Tasting Note</h1><div class="sub">写真を読んで、銘柄を探して、1杯の記録を残す。</div>
+<div style="font-size:11px;letter-spacing:.12em;color:#9a8d7c">WANGAN BREWING</div><h1>Beer Tasting Note</h1><div class="sub">先入観なしで味わい、最後に銘柄と答え合わせ。</div>
 <section id="home" class="card"><h2>どうやって始めますか？</h2><div class="grid">
-<button class="start" onclick="mode('photo')">📷<b>写真から開始</b><span class="muted">ラベルを撮影／写真を選択</span></button>
+<button class="start" onclick="mode('photo')">📷<b>ブラインドで開始</b><span class="muted">写真は保存だけ。銘柄は最後まで非表示</span></button>
 <button class="start" onclick="mode('search')">🔍<b>銘柄を検索</b><span class="muted">代表銘柄から自動入力</span></button>
 <button class="start" onclick="start()">✏️<b>手入力</b><span class="muted">自由に入力</span></button></div>
 <div id="photo" class="hidden"><div class="field"><label>カメラで撮る</label><input id="camera" type="file" accept="image/*" capture="environment"></div><div class="field"><label>写真ライブラリから選ぶ</label><input id="library" type="file" accept="image/*"></div><img id="pic" class="photo hidden">
-<div id="ocrBox" class="ref hidden"><b>ラベル文字認識（無料OCR）</b><div id="ocrStatus" class="muted" style="margin-top:6px">準備中</div><div id="ocrText" style="white-space:pre-wrap;margin-top:8px;font-size:13px"></div></div>
-<button id="photoGo" class="btn primary hidden" onclick="start()">この写真で開始</button></div>
+<div class="ref"><b>ブラインドモード</b><br><span class="muted">写真の文字はまだ解析しません。先に自分が感じたアロマ／フレーバーを記録してください。</span></div><button id="photoGo" class="btn primary hidden" onclick="start()">この写真で開始</button></div>
 <div id="search" class="hidden"><div class="field"><label>銘柄</label><input id="q" placeholder="Saison, Orval, Urquell..." oninput="catalog()"></div><div id="results"></div></div>
 </section>
 <section id="form" class="hidden">
-<div class="card"><h2>ビール情報</h2><img id="recordPic" class="photo hidden"><div class="field"><label>銘柄名</label><input id="name"></div><div class="field"><label>ブルワリー</label><input id="brewery"></div><div class="field"><label>スタイル</label><input id="style"></div><div class="field"><label>ABV %</label><input id="abv" inputmode="decimal"></div><div id="reference" class="ref hidden"></div></div>
+<div class="card"><h2>ブラインドテイスティング</h2><div class="ref"><b>銘柄情報は非表示です</b><br><span class="muted">まず自分の感覚だけで記録してください。</span></div></div>
+<div id="revealCard" class="card hidden"><h2>答え合わせ</h2><img id="recordPic" class="photo hidden">
+<div id="revealStatus" class="ref">「銘柄を確認」を押すと写真を解析します。</div>
+<div class="field"><label>銘柄名</label><input id="name"></div>
+<div class="field"><label>ブルワリー</label><input id="brewery"></div>
+<div class="field"><label>スタイル</label><input id="style"></div>
+<div class="field"><label>ABV %</label><input id="abv" inputmode="decimal"></div>
+<div id="reference" class="ref hidden"></div>
+<div id="comparison" class="ref hidden"></div></div>
 <div class="card"><h2>アロマ</h2><div class="muted">感じたものを選択</div><div id="aroma" class="chips"></div></div>
 <div class="card"><h2>フレーバー</h2><div id="flavor" class="chips"></div></div>
 <div class="card"><h2>バランス・口当たり</h2><div class="field"><label>ボディ</label><div id="body" class="chips"></div></div><div class="field"><label>炭酸</label><div id="carb" class="chips"></div></div><div class="field"><label>メモ</label><textarea id="memo"></textarea></div></div>
-<div class="card"><h2>テイスティングノート</h2><div id="preview" class="preview">入力するとここに表示されます。</div><div class="row" style="margin-top:12px"><button class="btn primary" onclick="save()">保存</button><button class="btn" onclick="makePreview()">更新</button></div></div>
+<div class="card"><h2>テイスティングノート</h2><div id="preview" class="preview">入力するとここに表示されます。</div><div class="row" style="margin-top:12px"><button class="btn primary" onclick="revealBeer()">銘柄を確認・答え合わせ</button><button class="btn" onclick="save()">保存</button><button class="btn" onclick="makePreview()">更新</button></div></div>
 </section></div>
 <div class="footer"><div><button class="btn" onclick="location.reload()">新規</button><button class="btn primary" onclick="makePreview()">ノート生成</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -60,37 +67,53 @@ function inferABV(text){
   const m=(text||"").match(/(?:alc\.?\s*)?(\d{1,2}(?:[.,]\d)?)\s*%/i);
   return m?m[1].replace(",","."):"";
 }
-async function runOCR(data){
-  ocrBox.classList.remove("hidden");
-  ocrStatus.textContent="英字ラベルを読み込んでいます…（初回は数十秒かかる場合があります）";
-  ocrText.textContent="";
-  if(!window.Tesseract){ocrStatus.textContent="OCRライブラリを読み込めませんでした。通信状態を確認してください。";return}
+async function identifyFromPhoto(data){
+  revealStatus.innerHTML="<b>写真を解析中…</b><br><span class=\"muted\">初回は数十秒かかる場合があります。</span>";
+  if(!window.Tesseract){revealStatus.textContent="OCRライブラリを読み込めませんでした。下の欄へ銘柄を手入力してください。";return null}
   try{
-    const result=await Tesseract.recognize(data,"eng",{
-      logger:m=>{
-        if(m.status==="recognizing text") ocrStatus.textContent="文字を解析中… "+Math.round((m.progress||0)*100)+"%";
-        else if(m.status) ocrStatus.textContent=m.status;
-      }
-    });
+    const result=await Tesseract.recognize(data,"eng",{logger:m=>{
+      if(m.status==="recognizing text") revealStatus.textContent="文字を解析中… "+Math.round((m.progress||0)*100)+"%";
+    }});
     const text=(result.data.text||"").trim();
-    ocrStatus.textContent=text?"読み取り完了":"文字を認識できませんでした";
-    ocrText.textContent=text||"ラベルを正面から大きく撮影して、もう一度お試しください。";
     const b=matchBeer(text);
+    const av=inferABV(text);
+    if(av) abv.value=av;
     if(b){
       name.value=b.name;brewery.value=b.brewery;style.value=b.style;abv.value=b.abv;
-      reference.classList.remove("hidden");
-      reference.innerHTML="<b>銘柄を推定："+b.name+"</b><br>教科書的アロマ："+b.aroma.join("、")+"<br>教科書的フレーバー："+b.flavor.join("、");
-      ocrStatus.textContent+=" ／ 登録銘柄と一致";
-    }else{
-      const av=inferABV(text); if(av) abv.value=av;
-      const lines=text.split(/\n+/).map(x=>x.trim()).filter(x=>x.length>=3);
-      if(lines.length&&!name.value) name.value=lines[0].slice(0,80);
-      ocrStatus.textContent+=" ／ 銘柄は未特定（読取結果を確認してください）";
+      revealStatus.innerHTML="<b>推定："+b.name+"</b><br><span class=\"muted\">写真の文字から登録銘柄と照合しました。</span>";
+      showComparison(b);
+      return b;
     }
+    revealStatus.innerHTML="<b>銘柄を自動特定できませんでした</b><br><span class=\"muted\">読み取った文字：<br>"+(text||"なし").replace(/</g,"&lt;").slice(0,500)+"<br>下の銘柄名を手入力できます。</span>";
+    return null;
   }catch(err){
-    ocrStatus.textContent="OCRエラー";
-    ocrText.textContent="エラー内容: "+String(err&&err.message||err)+"\n\n写真自体は取り込めています。「この写真で開始」で手入力もできます。";
+    revealStatus.textContent="OCRエラー："+String(err&&err.message||err)+"。銘柄は手入力できます。";
+    return null;
   }
+}
+function showComparison(b){
+  reference.classList.remove("hidden");
+  reference.innerHTML="<b>教科書的プロファイル</b><br>アロマ："+b.aroma.join("、")+"<br>フレーバー："+b.flavor.join("、");
+  const aHit=selected.aroma.filter(x=>b.aroma.includes(x));
+  const fHit=selected.flavor.filter(x=>b.flavor.includes(x));
+  const aMiss=b.aroma.filter(x=>!selected.aroma.includes(x));
+  const fMiss=b.flavor.filter(x=>!selected.flavor.includes(x));
+  const ownA=selected.aroma.filter(x=>!b.aroma.includes(x));
+  const ownF=selected.flavor.filter(x=>!b.flavor.includes(x));
+  comparison.classList.remove("hidden");
+  comparison.innerHTML="<b>あなたの感覚との比較</b><br><br>"+
+    "✓ 一致したアロマ："+(aHit.join("、")||"なし")+"<br>"+
+    "✓ 一致したフレーバー："+(fHit.join("、")||"なし")+"<br><br>"+
+    "教科書的だが感じなかったアロマ："+(aMiss.join("、")||"なし")+"<br>"+
+    "教科書的だが感じなかったフレーバー："+(fMiss.join("、")||"なし")+"<br><br>"+
+    "自分だけが感じたアロマ："+(ownA.join("、")||"なし")+"<br>"+
+    "自分だけが感じたフレーバー："+(ownF.join("、")||"なし");
+}
+async function revealBeer(){
+  revealCard.classList.remove("hidden");
+  revealCard.scrollIntoView({behavior:"smooth",block:"start"});
+  if(photo) await identifyFromPhoto(photo);
+  else revealStatus.textContent="写真がありません。銘柄名を手入力するか、次回は最初にラベル写真を保存してください。";
 }
 function file(e){
   let f=e.target.files&&e.target.files[0];if(!f)return;
@@ -99,7 +122,6 @@ function file(e){
     photo=x.target.result;pic.src=photo;pic.classList.remove("hidden");
     recordPic.src=photo;recordPic.classList.remove("hidden");
     photoGo.classList.remove("hidden");
-    runOCR(photo);
   };
   r.readAsDataURL(f)
 }
