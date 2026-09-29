@@ -4,12 +4,14 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f4efe5;color:#24211d;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}.app{max-width:760px;margin:auto;padding:22px 14px 90px}h1{margin:0;font-size:30px}.sub{color:#766e64;font-size:13px;margin:7px 0 22px}.card{background:#fffdf9;border:1px solid #ddd4c7;border-radius:20px;padding:18px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.start{background:white;border:1px solid #ddd4c7;border-radius:17px;padding:18px 10px;min-height:105px;text-align:left}.start b{display:block;font-size:16px;margin:8px 0}.muted{font-size:12px;color:#766e64}.hidden{display:none}.field{margin:12px 0}label{display:block;font-size:12px;color:#766e64;margin-bottom:6px}input,textarea{width:100%;padding:12px;border:1px solid #ddd4c7;border-radius:13px;font:inherit;background:#fff}textarea{min-height:90px}.btn{border:1px solid #ddd4c7;border-radius:14px;padding:12px 14px;background:white;font-weight:700}.primary{background:#24211d;color:#fff;border-color:#24211d}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid #ddd4c7;border-radius:999px;padding:9px 12px;background:white}.chip.on{background:#24211d;color:white}.ref{background:#fff7e7;border:1px solid #e5c987;border-radius:14px;padding:12px;margin:12px 0}.photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;margin-top:10px}.row{display:flex;gap:8px;flex-wrap:wrap}.footer{position:fixed;bottom:0;left:0;right:0;background:#faf7f1ee;border-top:1px solid #ddd4c7;padding:10px}.footer>div{max-width:760px;margin:auto;display:flex;gap:10px}.footer button{flex:1}.preview{white-space:pre-wrap;background:#27231f;color:#fff;padding:15px;border-radius:14px;line-height:1.6}@media(max-width:560px){.grid{grid-template-columns:1fr}}
 </style></head><body><div class="app">
-<div style="font-size:11px;letter-spacing:.12em;color:#9a8d7c">WANGAN BREWING</div><h1>Beer Tasting Note</h1><div class="sub">写真・銘柄検索・手入力から、1杯の記録を残す。</div>
+<div style="font-size:11px;letter-spacing:.12em;color:#9a8d7c">WANGAN BREWING</div><h1>Beer Tasting Note</h1><div class="sub">写真を読んで、銘柄を探して、1杯の記録を残す。</div>
 <section id="home" class="card"><h2>どうやって始めますか？</h2><div class="grid">
 <button class="start" onclick="mode('photo')">📷<b>写真から開始</b><span class="muted">ラベルを撮影／写真を選択</span></button>
 <button class="start" onclick="mode('search')">🔍<b>銘柄を検索</b><span class="muted">代表銘柄から自動入力</span></button>
 <button class="start" onclick="start()">✏️<b>手入力</b><span class="muted">自由に入力</span></button></div>
-<div id="photo" class="hidden"><div class="field"><label>カメラで撮る</label><input id="camera" type="file" accept="image/*" capture="environment"></div><div class="field"><label>写真ライブラリから選ぶ</label><input id="library" type="file" accept="image/*"></div><img id="pic" class="photo hidden"><button id="photoGo" class="btn primary hidden" onclick="start()">この写真で開始</button></div>
+<div id="photo" class="hidden"><div class="field"><label>カメラで撮る</label><input id="camera" type="file" accept="image/*" capture="environment"></div><div class="field"><label>写真ライブラリから選ぶ</label><input id="library" type="file" accept="image/*"></div><img id="pic" class="photo hidden">
+<div id="ocrBox" class="ref hidden"><b>写真の文字を読み取り中…</b><div id="ocrStatus" class="muted" style="margin-top:6px">準備中</div><div id="ocrText" style="white-space:pre-wrap;margin-top:8px;font-size:13px"></div></div>
+<button id="photoGo" class="btn primary hidden" onclick="start()">この写真で開始</button></div>
 <div id="search" class="hidden"><div class="field"><label>銘柄</label><input id="q" placeholder="Saison, Orval, Urquell..." oninput="catalog()"></div><div id="results"></div></div>
 </section>
 <section id="form" class="hidden">
@@ -20,6 +22,7 @@
 <div class="card"><h2>テイスティングノート</h2><div id="preview" class="preview">入力するとここに表示されます。</div><div class="row" style="margin-top:12px"><button class="btn primary" onclick="save()">保存</button><button class="btn" onclick="makePreview()">更新</button></div></div>
 </section></div>
 <div class="footer"><div><button class="btn" onclick="location.reload()">新規</button><button class="btn primary" onclick="makePreview()">ノート生成</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 const beers=[
 {name:"Saison Dupont",brewery:"Brasserie Dupont",style:"Saison",abv:"6.5",aroma:["胡椒","柑橘","洋梨","ハーブ","穀物"],flavor:["ドライ","胡椒","レモン","パン","ハーブ"]},
@@ -35,7 +38,71 @@ function start(){home.classList.add("hidden");form.classList.remove("hidden");wi
 function chips(id,arr,key,single=false){let e=document.getElementById(id);e.innerHTML=arr.map(x=>'<button class="chip" type="button">'+x+'</button>').join("");[...e.children].forEach(b=>b.onclick=()=>{if(single){selected[key]=[b.textContent];[...e.children].forEach(x=>x.classList.toggle("on",x===b))}else{b.classList.toggle("on");selected[key]=[...e.querySelectorAll(".on")].map(x=>x.textContent)};makePreview()})}
 function catalog(){let s=(q.value||"").toLowerCase();let a=beers.filter(b=>!s||JSON.stringify(b).toLowerCase().includes(s));results.innerHTML=a.map((b,i)=>'<button class="btn" style="width:100%;margin:4px 0;text-align:left" onclick="pick(\''+b.name.replaceAll("'","\\'")+'\')"><b>'+b.name+'</b><br><span class="muted">'+b.brewery+' / '+b.style+' / '+b.abv+'%</span></button>').join("")}
 function pick(n){let b=beers.find(x=>x.name===n);name.value=b.name;brewery.value=b.brewery;style.value=b.style;abv.value=b.abv;reference.classList.remove("hidden");reference.innerHTML="<b>教科書的に期待される要素</b><br>アロマ："+b.aroma.join("、")+"<br>フレーバー："+b.flavor.join("、");start()}
-function file(e){let f=e.target.files&&e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{photo=x.target.result;pic.src=photo;pic.classList.remove("hidden");recordPic.src=photo;recordPic.classList.remove("hidden");photoGo.classList.remove("hidden")};r.readAsDataURL(f)}
+function normalize(s){return (s||"").toLowerCase().replace(/[^a-z0-9ぁ-んァ-ヶ一-龠]/g,"")}
+function matchBeer(text){
+  const t=normalize(text);
+  let best=null,bestScore=0;
+  beers.forEach(b=>{
+    const terms=[b.name,b.brewery].map(normalize).filter(Boolean);
+    let score=0;
+    terms.forEach(term=>{
+      if(t.includes(term)) score+=term.length;
+      else{
+        const words=term.match(/[a-z0-9]{4,}/g)||[];
+        score+=words.filter(w=>t.includes(w)).reduce((n,w)=>n+w.length,0);
+      }
+    });
+    if(score>bestScore){bestScore=score;best=b}
+  });
+  return bestScore>=5?best:null;
+}
+function inferABV(text){
+  const m=(text||"").match(/(?:alc\.?\s*)?(\d{1,2}(?:[.,]\d)?)\s*%/i);
+  return m?m[1].replace(",","."):"";
+}
+async function runOCR(data){
+  ocrBox.classList.remove("hidden");
+  ocrStatus.textContent="OCRを読み込んでいます…";
+  ocrText.textContent="";
+  if(!window.Tesseract){ocrStatus.textContent="OCRライブラリを読み込めませんでした。通信状態を確認してください。";return}
+  try{
+    const result=await Tesseract.recognize(data,"eng+jpn",{
+      logger:m=>{
+        if(m.status==="recognizing text") ocrStatus.textContent="文字を解析中… "+Math.round((m.progress||0)*100)+"%";
+        else if(m.status) ocrStatus.textContent=m.status;
+      }
+    });
+    const text=(result.data.text||"").trim();
+    ocrStatus.textContent=text?"読み取り完了":"文字を認識できませんでした";
+    ocrText.textContent=text||"ラベルを正面から大きく撮影して、もう一度お試しください。";
+    const b=matchBeer(text);
+    if(b){
+      name.value=b.name;brewery.value=b.brewery;style.value=b.style;abv.value=b.abv;
+      reference.classList.remove("hidden");
+      reference.innerHTML="<b>銘柄を推定："+b.name+"</b><br>教科書的アロマ："+b.aroma.join("、")+"<br>教科書的フレーバー："+b.flavor.join("、");
+      ocrStatus.textContent+=" ／ 登録銘柄と一致";
+    }else{
+      const av=inferABV(text); if(av) abv.value=av;
+      const lines=text.split(/\n+/).map(x=>x.trim()).filter(x=>x.length>=3);
+      if(lines.length&&!name.value) name.value=lines[0].slice(0,80);
+      ocrStatus.textContent+=" ／ 銘柄は未特定（読取結果を確認してください）";
+    }
+  }catch(err){
+    ocrStatus.textContent="読み取りに失敗しました";
+    ocrText.textContent=String(err&&err.message||err);
+  }
+}
+function file(e){
+  let f=e.target.files&&e.target.files[0];if(!f)return;
+  let r=new FileReader();
+  r.onload=x=>{
+    photo=x.target.result;pic.src=photo;pic.classList.remove("hidden");
+    recordPic.src=photo;recordPic.classList.remove("hidden");
+    photoGo.classList.remove("hidden");
+    runOCR(photo);
+  };
+  r.readAsDataURL(f)
+}
 camera.onchange=file;library.onchange=file;
 function makePreview(){preview.textContent="【"+(name.value||"名称未入力")+"】\n"+[brewery.value,style.value].filter(Boolean).join(" / ")+"\nABV："+(abv.value||"-")+"%\n\nアロマ："+(selected.aroma.join("、")||"未記録")+"\nフレーバー："+(selected.flavor.join("、")||"未記録")+"\nボディ："+(selected.body[0]||"-")+" / 炭酸："+(selected.carb[0]||"-")+"\n"+(memo.value?"メモ："+memo.value:"")}
 function save(){makePreview();let x=JSON.parse(localStorage.getItem("beerNotes")||"[]");x.unshift({date:new Date().toISOString(),name:name.value,brewery:brewery.value,style:style.value,abv:abv.value,selected,memo:memo.value,photo,preview:preview.textContent});try{localStorage.setItem("beerNotes",JSON.stringify(x.slice(0,50)));alert("保存しました")}catch(e){alert("写真容量が大きく保存できませんでした。ノート本文は利用できます。")}}
