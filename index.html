@@ -10,7 +10,7 @@
 <button class="start" onclick="mode('search')">🔍<b>銘柄を検索</b><span class="muted">代表銘柄から自動入力</span></button>
 <button class="start" onclick="start()">✏️<b>手入力</b><span class="muted">自由に入力</span></button></div>
 <div id="photo" class="hidden"><div class="field"><label>カメラで撮る</label><input id="camera" type="file" accept="image/*" capture="environment"></div><div class="field"><label>写真ライブラリから選ぶ</label><input id="library" type="file" accept="image/*"></div><img id="pic" class="photo hidden">
-<div id="ocrBox" class="ref hidden"><b>写真の文字を読み取り中…</b><div id="ocrStatus" class="muted" style="margin-top:6px">準備中</div><div id="ocrText" style="white-space:pre-wrap;margin-top:8px;font-size:13px"></div></div>
+<div id="ocrBox" class="ref hidden"><b>ラベル文字認識（無料OCR）</b><div id="ocrStatus" class="muted" style="margin-top:6px">準備中</div><div id="ocrText" style="white-space:pre-wrap;margin-top:8px;font-size:13px"></div></div>
 <button id="photoGo" class="btn primary hidden" onclick="start()">この写真で開始</button></div>
 <div id="search" class="hidden"><div class="field"><label>銘柄</label><input id="q" placeholder="Saison, Orval, Urquell..." oninput="catalog()"></div><div id="results"></div></div>
 </section>
@@ -62,11 +62,11 @@ function inferABV(text){
 }
 async function runOCR(data){
   ocrBox.classList.remove("hidden");
-  ocrStatus.textContent="OCRを読み込んでいます…";
+  ocrStatus.textContent="英字ラベルを読み込んでいます…（初回は数十秒かかる場合があります）";
   ocrText.textContent="";
   if(!window.Tesseract){ocrStatus.textContent="OCRライブラリを読み込めませんでした。通信状態を確認してください。";return}
   try{
-    const result=await Tesseract.recognize(data,"eng+jpn",{
+    const result=await Tesseract.recognize(data,"eng",{
       logger:m=>{
         if(m.status==="recognizing text") ocrStatus.textContent="文字を解析中… "+Math.round((m.progress||0)*100)+"%";
         else if(m.status) ocrStatus.textContent=m.status;
@@ -88,8 +88,8 @@ async function runOCR(data){
       ocrStatus.textContent+=" ／ 銘柄は未特定（読取結果を確認してください）";
     }
   }catch(err){
-    ocrStatus.textContent="読み取りに失敗しました";
-    ocrText.textContent=String(err&&err.message||err);
+    ocrStatus.textContent="OCRエラー";
+    ocrText.textContent="エラー内容: "+String(err&&err.message||err)+"\n\n写真自体は取り込めています。「この写真で開始」で手入力もできます。";
   }
 }
 function file(e){
