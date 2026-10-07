@@ -1,194 +1,242 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Beer Tasting Note</title>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#284a3e">
+<meta name="description" content="色、立ち香、味・口中香、炭酸、アルコール感を、先入観なしで記録するビールテイスティングノート。">
+<title>Beer Tasting Note | WANGAN BREWING</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4efe5;color:#24211d;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}.app{max-width:760px;margin:auto;padding:22px 14px 90px}h1{margin:0;font-size:30px}.sub{color:#766e64;font-size:13px;margin:7px 0 22px}.card{background:#fffdf9;border:1px solid #ddd4c7;border-radius:20px;padding:18px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.start{background:white;border:1px solid #ddd4c7;border-radius:17px;padding:18px 10px;min-height:105px;text-align:left}.start b{display:block;font-size:16px;margin:8px 0}.muted{font-size:12px;color:#766e64}.hidden{display:none}.field{margin:12px 0}label{display:block;font-size:12px;color:#766e64;margin-bottom:6px}input,textarea{width:100%;padding:12px;border:1px solid #ddd4c7;border-radius:13px;font:inherit;background:#fff}textarea{min-height:90px}.btn{border:1px solid #ddd4c7;border-radius:14px;padding:12px 14px;background:white;font-weight:700}.primary{background:#24211d;color:#fff;border-color:#24211d}.chips{display:flex;flex-wrap:wrap;gap:8px}.sensoryGroup{border-top:1px dashed #ddd4c7;padding-top:12px;margin-top:14px}.sensoryGroup:first-child{border-top:0;margin-top:8px}.sensoryTitle{font-size:13px;font-weight:800;margin-bottom:8px;color:#5f5548}.chip{border:1px solid #ddd4c7;border-radius:999px;padding:9px 12px;background:white}.chip.on{background:#24211d;color:white}.ref{background:#fff7e7;border:1px solid #e5c987;border-radius:14px;padding:12px;margin:12px 0}.photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;margin-top:10px}.row{display:flex;gap:8px;flex-wrap:wrap}.footer{position:fixed;bottom:0;left:0;right:0;background:#faf7f1ee;border-top:1px solid #ddd4c7;padding:10px}.footer>div{max-width:760px;margin:auto;display:flex;gap:10px}.footer button{flex:1}.preview{white-space:pre-wrap;background:#27231f;color:#fff;padding:15px;border-radius:14px;line-height:1.6}@media(max-width:560px){.grid{grid-template-columns:1fr}}
-</style></head><body><div class="app">
-<div style="font-size:11px;letter-spacing:.12em;color:#9a8d7c">WANGAN BREWING</div><h1>Beer Tasting Note</h1><div class="sub">先入観なしで味わい、最後に銘柄と答え合わせ。</div>
-<section id="home" class="card hidden"><h2>どうやって始めますか？</h2><div class="grid">
-<button class="start" onclick="mode('photo')">📷<b>ブラインドで開始</b><span class="muted">写真は保存だけ。銘柄は最後まで非表示</span></button>
-
-<button class="start" onclick="start()">👃<b>写真なしで開始</b><span class="muted">銘柄を入力せずテイスティング</span></button></div>
-<div id="photo" class="hidden"><div class="field"><label>カメラで撮る</label><input id="camera" type="file" accept="image/*" capture="environment"></div><div class="field"><label>写真ライブラリから選ぶ</label><input id="library" type="file" accept="image/*"></div><img id="pic" class="photo hidden">
-<div class="ref"><b>ブラインドモード</b><br><span class="muted">写真の文字はまだ解析しません。先に自分が感じたアロマ／フレーバーを記録してください。</span></div><button id="photoGo" class="btn primary hidden" onclick="start()">この写真で開始</button></div>
-<div id="search" class="hidden"><div class="field"><label>銘柄</label><input id="q" placeholder="Saison, Orval, Urquell..." oninput="catalog()"></div><div id="results"></div></div>
-</section>
-<section id="form">
-<div class="card"><h2>ブラインドテイスティング</h2><div class="ref"><b>銘柄情報は非表示です</b><br><span class="muted">まず自分の感覚だけで記録してください。</span></div></div>
-<div id="revealCard" class="card hidden">
-<h2>答え合わせ</h2>
-<div class="muted">テイスティングが終わってから銘柄を確認します。</div>
-<div class="grid" style="margin-top:12px">
-<button class="start" type="button" onclick="answerMode('answerPhoto')">📷<b>写真から確認</b><span class="muted">ラベルを撮影／選択して文字認識</span></button>
-<button class="start" type="button" onclick="answerMode('answerSearch')">🔍<b>銘柄を検索</b><span class="muted">登録銘柄から探す</span></button>
-<button class="start" type="button" onclick="answerMode('answerManual')">✏️<b>手入力</b><span class="muted">判明した銘柄を入力</span></button>
+:root{--bg:#f5f2eb;--paper:#fffefa;--ink:#272d28;--muted:#686e65;--line:#dedfd4;--green:#284a3e;--light:#eaf0e9;--amber:#b37d34;--soft:#f8f1df;--danger:#9b3e32;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;font-size:14px;line-height:1.65}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:wait;opacity:.55}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #ba8f48;outline-offset:3px}button,a,input,textarea,select{-webkit-tap-highlight-color:transparent}button{color:inherit}h1,h2,h3,p{margin:0}h1{font-size:27px;line-height:1.2;font-weight:700;letter-spacing:-.04em}h2{font-size:25px;line-height:1.4;letter-spacing:-.03em}h3{font-size:16px}a{color:var(--green);text-underline-offset:3px}[hidden]{display:none!important}
+.app{max-width:1160px;margin:auto;padding:24px 26px 120px}.header{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px}.brandmark{width:43px;height:52px;color:var(--green);flex:none}.eyebrow{font-size:10px;letter-spacing:.17em;font-weight:800;color:var(--green);margin-bottom:5px}.header-actions{display:flex;gap:8px;align-items:center}.button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:9px 15px;font-weight:650;text-decoration:none}.button:hover{border-color:var(--green);background:var(--light)}.button.primary{color:white;background:var(--green);border-color:var(--green)}.button.primary:hover{background:#1d3c30}.button.quiet{background:transparent}.button.small{font-size:12px;padding:7px 11px;min-height:40px}.button.danger{color:var(--danger)}.icon{height:17px;width:17px;flex:none}.count{min-width:20px;line-height:20px;border-radius:12px;font-size:11px;background:var(--light);color:var(--green)}
+.intro{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:19px 0 17px}.intro p{color:var(--muted);font-size:13px}.status-label{font-size:11px;color:var(--green);white-space:nowrap}.status-label::before{content:"";display:inline-block;width:6px;height:6px;background:#668365;border-radius:50%;margin-right:6px}.nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper);margin-bottom:23px}.nav button{min-height:62px;border:0;border-right:1px solid var(--line);background:none;font-size:12px;text-align:left;padding:10px 13px;line-height:1.4}.nav button:last-child{border-right:0}.nav button .num{display:block;color:var(--muted);font-size:10px;letter-spacing:.06em;margin-bottom:4px}.nav button[aria-current=step]{background:var(--green);color:#fff}.nav button[aria-current=step] .num{color:#cfddd1}.nav button:not([aria-current=step]):hover{background:var(--light)}.nav button.has-entry .num::after{content:" · 記入あり";font-size:9px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:24px;align-items:start}.panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:27px 28px;min-width:0}.step-heading{display:flex;align-items:start;justify-content:space-between;gap:14px;margin-bottom:24px}.step-heading .hint{margin-top:8px}.step-number{font-size:12px;color:var(--amber);font-weight:750;letter-spacing:.07em;margin-bottom:5px}.hint{color:var(--muted);font-size:12px;line-height:1.8}.tag{display:inline-block;padding:4px 9px;border:1px solid var(--line);border-radius:7px;white-space:nowrap;font-size:10px;color:var(--muted);background:#fafaf5}.field,fieldset{margin:22px 0 0}fieldset{padding:0;border:0;min-width:0}label,.legend,legend{display:block;font-size:13px;font-weight:700;margin-bottom:9px}legend{padding:0}.optional{font-size:10px;font-weight:400;color:var(--muted);margin-left:7px}input,textarea,select{width:100%;color:var(--ink);background:#fff;border:1px solid #d4d8cf;border-radius:9px;padding:11px 12px;min-height:44px}input::placeholder,textarea::placeholder{color:#92988e}textarea{resize:vertical;min-height:90px}input[type=file]{font-size:12px;padding:10px;max-width:100%}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field-row .field{min-width:0}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--line);background:white;border-radius:9px;min-height:42px;padding:8px 12px;font-size:12px;line-height:1.5}.chip:hover{border-color:#859c86;background:#f5f8f2}.chip[aria-pressed=true]{color:var(--green);background:var(--light);border-color:#718e76;box-shadow:inset 0 0 0 1px #718e7620}.chip[aria-pressed=true]::before{content:"✓ ";font-weight:750}.color-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.color-chip{min-height:101px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px 5px 7px;position:relative;color:var(--muted);font-size:10px;line-height:1.5}.color-chip .swatch{display:block;height:47px;border-radius:7px;margin:0 2px 7px;background:var(--swatch)}.color-chip[aria-pressed=true]{border:2px solid var(--green);padding:7px 4px 6px;color:var(--green);font-weight:750;background:#f4f7f0}.color-chip[aria-pressed=true]::after{content:"✓";position:absolute;right:10px;top:11px;background:#fff;border-radius:50%;width:18px;height:18px;line-height:18px;font-size:12px;color:var(--green)}
+.scale-wrap{margin-top:20px}.scale-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;gap:10px}.scale-head label{margin:0}.scale-value{font-size:11px;color:var(--muted);font-weight:400}.scale{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}.scale button{border:1px solid var(--line);border-radius:9px;background:white;padding:8px 3px;min-height:58px;font-size:10px;line-height:1.3}.scale button b{display:block;font-size:16px;font-weight:600;margin-bottom:4px}.scale button[aria-pressed=true]{background:var(--green);color:#fff;border-color:var(--green)}.scale button:hover:not([aria-pressed=true]){background:var(--light)}.scale-hint{font-size:10px;color:var(--muted);margin-top:7px}.divider{border:0;border-top:1px solid var(--line);margin:27px 0 24px}.aroma-group{padding:16px 0;border-bottom:1px solid #e9eae2}.aroma-group:last-child{border-bottom:0}.group-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}.group-name{font-size:12px;font-weight:750}.group-en{font-size:9px;letter-spacing:.06em;color:#93998d}.note{padding:12px 14px;border-radius:10px;background:var(--light);color:#4c6251;font-size:12px;line-height:1.8}.note.amber{background:var(--soft);color:#79603a}.note + .field{margin-top:18px}.subsection{margin-top:25px;padding-top:24px;border-top:1px solid var(--line)}.subsection h3{margin-bottom:8px}details{margin-top:18px}details>summary{cursor:pointer;font-size:12px;font-weight:650;color:var(--green);padding:8px 0;min-height:40px}details[open]>summary{margin-bottom:6px}
+.side{position:sticky;top:24px}.side-card{background:#e9eee6;border:1px solid #dce2d5;border-radius:var(--radius);padding:22px}.side-title{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:15px}.side-title strong{font-size:14px}.side-title span{font-size:10px;color:var(--muted)}.sample-label{font-size:11px;color:var(--muted);margin-bottom:3px}.sample-name{font-size:20px;font-weight:650;overflow-wrap:anywhere;margin-bottom:17px;line-height:1.5}.side-block{padding:13px 0;border-top:1px solid #d3ddce}.side-block dt{font-size:10px;color:#66705f;margin-bottom:5px}.side-block dd{margin:0;font-size:12px;overflow-wrap:anywhere}.side-block.empty dd{color:#919a89}.side-actions{width:100%;margin-top:13px}.side-tip{color:var(--muted);font-size:11px;line-height:1.8;padding:17px 5px}.side-tip strong{color:#646e60;font-weight:600}.preview{white-space:pre-wrap;overflow-wrap:anywhere;padding:19px;border:1px solid var(--line);border-radius:12px;background:#f8f8f1;font-size:12px;line-height:1.9;margin:18px 0 0}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.save-line{margin-top:10px;font-size:11px;color:var(--muted)}.footer{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#fafaf5f5;backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px 24px calc(12px + env(safe-area-inset-bottom))}.footer-inner{max-width:1108px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}.footer-progress{font-size:11px;color:var(--muted)}.footer-progress strong{color:var(--green);font-size:13px}.footer-buttons{display:flex;gap:10px}.footer-buttons .primary{min-width:165px}.toast{position:fixed;bottom:93px;left:50%;transform:translateX(-50%);z-index:60;max-width:min(560px,calc(100% - 24px));padding:12px 20px;border-radius:10px;background:var(--green);box-shadow:0 5px 25px #20362826;color:white;font-size:13px}.toast.error{background:var(--danger)}.banner{padding:12px 16px;border-radius:9px;background:#f9e8dd;color:#863e26;font-size:12px;margin:14px 0 0}
+.off-detail{border:1px solid var(--line);border-radius:12px;padding:17px;margin-top:12px}.off-detail strong{font-size:13px}.off-detail .scale-wrap{margin-top:12px}.off-detail .field{margin-top:14px}.off-empty{margin-top:16px;color:var(--muted);font-size:12px}.specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:19px}.spec{border:1px solid var(--line);border-radius:12px;padding:13px 12px}.spec label{font-size:12px;margin-bottom:7px}.spec-unit{font-size:10px;display:block;font-weight:400;color:var(--muted)}.spec select{margin-top:9px;font-size:11px;padding:9px 7px}.spec input{font-variant-numeric:tabular-nums;font-size:18px}.catalog{display:grid;gap:7px;margin-top:12px}.catalog button{text-align:left;justify-content:start;display:block}.catalog strong{display:block;font-size:12px}.catalog span{display:block;font-size:10px;font-weight:400;color:var(--muted)}.photo{display:block;max-width:100%;max-height:280px;margin:15px auto;object-fit:contain;border-radius:10px}.ocr-status{margin:10px 0;font-size:12px;color:var(--muted)}.profile{border:1px solid #dbe1d4;border-radius:10px;margin-top:16px;padding:14px;font-size:12px;background:#f4f7ed;line-height:1.8}.profile h3{font-size:13px;margin-bottom:7px}.profile p+p{margin-top:6px}.history-item{display:flex;align-items:center;gap:12px;justify-content:space-between;border-top:1px solid var(--line);padding:15px 0}.history-item:first-child{border-top:0}.history-info{min-width:0;flex:1}.history-info strong{display:block;font-size:14px;overflow-wrap:anywhere}.history-info p{font-size:11px;color:var(--muted);margin-top:4px}.history-panel{max-width:800px;margin:auto}.empty-state{text-align:center;padding:36px 10px;color:var(--muted);font-size:13px}.history-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:20px}.empty-state strong{display:block;color:var(--ink);font-size:17px;margin-bottom:9px}.source-links{font-size:11px;line-height:2}.section-meta{display:flex;justify-content:space-between;gap:12px;font-size:10px;color:var(--muted);margin-bottom:12px}.keynote{font-size:11px;color:var(--muted);margin:15px 0 0}.revealed-badge{background:var(--soft);color:#79592d;border-color:#e4d5b5}
+@media(max-width:920px){.app{padding:19px 20px 115px}.layout{grid-template-columns:minmax(0,1fr) 240px;gap:17px}.panel{padding:24px 22px}.nav button{padding:10px}.side-card{padding:18px}.header h1{font-size:24px}.brandmark{width:36px}.specs{grid-template-columns:1fr}.spec{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:8px}.spec select{grid-column:2;margin:0}.spec label{grid-row:1/3}.spec input{min-width:0}}
+@media(max-width:740px){.app{max-width:600px;padding:18px 15px 117px}.header{padding-bottom:15px}.header h1{font-size:22px}.brandmark{width:29px;height:44px}.brand{gap:9px}.eyebrow{font-size:8px;letter-spacing:.16em}.header-actions .button{padding:9px 11px;font-size:12px}.header-actions .icon{display:none}.intro{align-items:start;padding:16px 1px}.intro p{font-size:11px;max-width:250px}.status-label{font-size:9px;padding-top:1px}.nav{grid-template-columns:repeat(3,1fr);margin-bottom:17px}.nav button{min-height:56px;font-size:11px;padding:8px 11px}.nav button:nth-child(3){border-right:0}.nav button:nth-child(-n+3){border-bottom:1px solid var(--line)}.nav button .num{font-size:9px;margin-bottom:3px}.layout{display:block}.side{display:none}.panel{padding:22px 19px;border-radius:15px}h2{font-size:23px}.step-heading{margin-bottom:23px;gap:8px}.step-heading .hint{font-size:11px}.tag{font-size:9px;padding:4px 7px}.color-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.color-chip{min-height:89px;font-size:9px}.color-chip .swatch{height:39px;margin-left:0;margin-right:0}.chip{font-size:11px;padding:8px 10px;min-height:43px}.chips{gap:7px}.scale button{font-size:9px;min-height:61px}.scale button b{font-size:17px}.scale-value{font-size:10px}.field-row{grid-template-columns:1fr;gap:0}.footer{padding:11px 15px calc(11px + env(safe-area-inset-bottom))}.footer-inner{gap:10px}.footer-progress{font-size:9px;max-width:95px;line-height:1.6}.footer-progress strong{font-size:11px}.footer-buttons{gap:7px}.footer-buttons .button{font-size:12px;min-height:46px;padding:10px 13px}.footer-buttons .primary{min-width:135px}.hint{font-size:11px}.history-toolbar{align-items:start}.history-item .actions{margin:0}.history-item{align-items:start}.toast{bottom:94px;font-size:12px}.off-detail{padding:14px 12px}.specs{grid-template-columns:1fr}.step-number{font-size:10px}.subsection{margin-top:23px}.preview{padding:15px;font-size:11px}.intro .status-label{max-width:115px;white-space:normal;text-align:right}.save-line{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+@media print{body{background:white}.header-actions,.nav,.intro,.side,.footer,.actions,.source-links{display:none!important}.layout{display:block}.panel{border:0;padding:0}.step-panel{display:none!important}#step-5{display:block!important}#reveal-section{display:none!important}.app{padding:15px;max-width:none}.preview{border:0;background:white;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header class="header">
+  <div class="brand"><svg class="brandmark" viewBox="0 0 42 54" fill="none" aria-hidden="true"><path d="M7 6h28l-3 28c-.5 7-6 10-11 10S10.5 41 10 34L7 6Z" stroke="currentColor" stroke-width="1.6"/><path d="M10 15h22M21 44v6M13 50h16" stroke="currentColor" stroke-width="1.6"/><path d="M13 20h16l-1.7 13c-.5 3.8-3.2 6-6.3 6s-5.8-2.2-6.3-6L13 20Z" fill="currentColor"/><circle cx="19" cy="27" r="1.2" fill="#f5f2eb"/><circle cx="24" cy="32" r="1" fill="#f5f2eb"/></svg><div><div class="eyebrow">WANGAN BREWING</div><h1>Beer Tasting Note</h1></div></div>
+  <div class="header-actions"><button class="button quiet" id="history-btn" type="button">記録 <span class="count" id="history-count">0</span></button></div>
+ </header>
+ <div class="banner" id="storage-banner" role="alert" hidden></div>
+ <div id="editor">
+  <div class="intro"><p>銘柄はあとから。今、感じたことを残しましょう。</p><span class="status-label" id="draft-status" role="status">新しいテイスティング</span></div>
+  <nav class="nav" id="step-nav" aria-label="テイスティングの順番"></nav>
+  <div class="layout">
+   <main>
+    <section class="panel step-panel" id="step-0" aria-labelledby="heading-0">
+     <div class="step-heading"><div><div class="step-number">01 / APPEARANCE</div><h2 id="heading-0" tabindex="-1">色をみる</h2><p class="hint">明るい場所で、色・透明度・泡を確認します。</p></div><span class="tag">外観</span></div>
+     <fieldset><legend>ビールの色</legend><div class="color-grid" id="color-picker"></div><p class="scale-hint">色見本は目安です。画面や照明によって見え方が変わります。</p></fieldset>
+     <div class="field"><label for="color-note">色の補足<span class="optional">任意</span></label><input id="color-note" data-field="colorNote" placeholder="例：光に透かすとルビー色" maxlength="300"></div>
+     <fieldset><legend>透明度</legend><div class="chips" data-choice="clarity"></div></fieldset>
+     <fieldset><legend>泡の持続性<span class="optional">任意</span></legend><div class="chips" data-choice="foam"></div></fieldset>
+     <div class="field"><label for="sample">サンプル番号・呼び名<span class="optional">任意</span></label><input id="sample" data-field="sample" placeholder="例：A、1杯目、試飲③" maxlength="100"></div>
+    </section>
+    <section class="panel step-panel" id="step-1" aria-labelledby="heading-1" hidden>
+     <div class="step-heading"><div><div class="step-number">02 / AROMA</div><h2 id="heading-1" tabindex="-1">立ち香をとる</h2><p class="hint">口に含む前に、グラスから立ち上がる香りを確認します。</p></div><span class="tag">鼻で感じる</span></div>
+     <div data-scale="aromaIntensity" data-label="香りの強さ"></div>
+     <p class="keynote">由来別の分類は目安です。同じ香りが複数の材料・工程から生まれることがあります。</p>
+     <div id="aroma-groups"></div>
+     <div class="field"><label for="aroma-note">その他の香り・変化<span class="optional">任意</span></label><textarea id="aroma-note" data-field="aromaNote" placeholder="例：最初は柑橘。温度が上がると蜂蜜のような香り。" maxlength="3000"></textarea></div>
+    </section>
+    <section class="panel step-panel" id="step-2" aria-labelledby="heading-2" hidden>
+     <div class="step-heading"><div><div class="step-number">03 / TASTE & FLAVOR</div><h2 id="heading-2" tabindex="-1">口に含む</h2><p class="hint">味の強さ、鼻に抜ける香り、全体のまとまりを確認します。</p></div><span class="tag">味・口中香</span></div>
+     <div data-scale="sweetness" data-label="甘味"></div><div data-scale="bitterness" data-label="苦み（感じた強さ）"></div><div data-scale="acidity" data-label="酸味"></div>
+     <details><summary>塩味・うま味も記録する</summary><div data-scale="saltiness" data-label="塩味"></div><div data-scale="umami" data-label="うま味"></div></details>
+     <div class="subsection"><h3>口中香・フレーバー</h3><p class="hint">口に含んだあと、鼻に抜ける香りや香味。立ち香とは別に記録します。</p><div id="flavor-groups"></div><div class="field"><label for="flavor-note">フレーバーの補足<span class="optional">任意</span></label><textarea id="flavor-note" data-field="flavorNote" placeholder="例：入りはトースト。後半にコーヒーの香味が広がる。" maxlength="3000"></textarea></div></div>
+     <div class="subsection"><h3>構成バランス</h3><fieldset><legend>目立つ要素<span class="optional">複数選択可</span></legend><div class="chips" data-multi="dominant"></div></fieldset><fieldset><legend>全体の調和</legend><div class="chips" data-choice="harmony"></div><p class="scale-hint">何かが強くても、全体が調和していればそのまま記録します。</p></fieldset><fieldset><legend>苦みの質<span class="optional">複数選択可</span></legend><div class="chips" data-multi="bitterQuality"></div></fieldset><fieldset><legend>苦みの残り方</legend><div class="chips" data-choice="bitterFinish"></div></fieldset></div>
+     <div class="subsection"><h3>余韻</h3><fieldset><legend>長さ</legend><div class="chips" data-choice="finish"></div></fieldset><fieldset><legend>飲んだあとに残るもの<span class="optional">複数選択可</span></legend><div class="chips" data-multi="aftertaste"></div></fieldset></div>
+    </section>
+    <section class="panel step-panel" id="step-3" aria-labelledby="heading-3" hidden>
+     <div class="step-heading"><div><div class="step-number">04 / MOUTHFEEL</div><h2 id="heading-3" tabindex="-1">炭酸・アルコール感</h2><p class="hint">口の中で感じる刺激、厚み、温かさを記録します。</p></div><span class="tag">体感</span></div>
+     <div data-scale="carbonation" data-label="炭酸の強さ"></div>
+     <fieldset><legend>泡・刺激の印象<span class="optional">複数選択可</span></legend><div class="chips" data-multi="bubbleTexture"></div></fieldset>
+     <div class="subsection"><div data-scale="warmth" data-label="アルコールの温感"></div><fieldset><legend>アルコール感の質<span class="optional">複数選択可</span></legend><div class="chips" data-multi="alcoholQuality"></div></fieldset></div>
+     <div class="subsection"><fieldset><legend>ボディ（飲みごたえ・厚み）</legend><div class="chips" data-choice="body"></div></fieldset><fieldset><legend>口当たり<span class="optional">複数選択可</span></legend><div class="chips" data-multi="mouth"></div></fieldset><div class="field"><label for="mouth-note">口当たりのメモ<span class="optional">任意</span></label><textarea id="mouth-note" data-field="mouthNote" placeholder="例：泡は細かく、やわらかい口当たり。後半に温かさ。" maxlength="3000"></textarea></div></div>
+     <div class="note amber" style="margin-top:22px">ガスボリューム（CO₂ vol）・度数（ABV %）・苦み値（IBU）は、最後の「銘柄・数値を確認」で記録できます。</div>
+    </section>
+    <section class="panel step-panel" id="step-4" aria-labelledby="heading-4" hidden>
+     <div class="step-heading"><div><div class="step-number">05 / OFF-FLAVORS</div><h2 id="heading-4" tabindex="-1">オフフレーバー</h2><p class="hint">気になる香り・味があるかを確認します。</p></div><span class="tag">特徴と判断</span></div>
+     <fieldset><legend>確認の結果</legend><div class="chips" id="off-status"></div></fieldset>
+     <div class="note" style="margin-top:19px">検出した特徴が欠点かどうかは、スタイルや強さによって変わります。迷ったら「判断保留」で残せます。</div>
+     <div id="off-selection" hidden><fieldset><legend>感じた特徴<span class="optional">複数選択可</span></legend><div class="chips" id="off-picker"></div></fieldset><div id="off-details"></div></div>
+     <div class="field"><label for="off-note">補足・確認したいこと<span class="optional">任意</span></label><textarea id="off-note" data-field="offNote" placeholder="例：ごく弱いバター香。スタイル確認後に判断したい。" maxlength="3000"></textarea></div>
+    </section>
+    <section class="panel step-panel" id="step-5" aria-labelledby="heading-5" hidden>
+     <div class="step-heading"><div><div class="step-number">06 / YOUR NOTE</div><h2 id="heading-5" tabindex="-1">1杯の記録</h2><p class="hint">感じたことを見直して、ノートを保存します。</p></div><span class="tag" id="blind-badge">銘柄未確認</span></div>
+     <div class="field"><label for="memo">全体の感想<span class="optional">任意</span></label><textarea id="memo" data-field="memo" placeholder="例：香ばしさと苦みのバランスがよく、後味はすっきり。" maxlength="5000"></textarea></div>
+     <div class="preview" id="preview"></div>
+     <div class="actions"><button class="button primary" type="button" id="save-btn">このノートを保存</button><button class="button" type="button" id="copy-btn">文章をコピー</button><button class="button" type="button" id="export-note-btn">JSON書き出し</button><button class="button quiet" type="button" id="new-note-btn">新しい1杯</button></div><p class="save-line">保存先は、この端末・このブラウザです。銘柄が不明でも保存できます。</p>
+     <div class="subsection"><h3>テイスティングを終えたら</h3><p class="hint">ラベルや銘柄を確認し、数値・参考プロファイルと見比べます。</p><button class="button" type="button" id="reveal-btn" style="margin-top:13px">銘柄・数値を確認</button></div>
+     <div id="reveal-section" hidden>
+      <div class="field-row"><div class="field"><label for="beer-name">銘柄名</label><input id="beer-name" data-field="name" placeholder="分かったときに入力" maxlength="200"></div><div class="field"><label for="brewery">ブルワリー</label><input id="brewery" data-field="brewery" maxlength="200"></div></div><div class="field"><label for="beer-style">ビアスタイル</label><input id="beer-style" data-field="style" placeholder="例：ヴァイスビア" maxlength="200"></div>
+      <details id="catalog-details"><summary>登録してある5銘柄から選ぶ</summary><label for="catalog-query">登録銘柄を検索</label><input id="catalog-query" type="search" placeholder="Saison / Orval / ヴァイエン…"><div class="catalog" id="catalog-results"></div><p class="scale-hint">このアプリに登録された銘柄のみを検索します。</p></details>
+      <details id="photo-details"><summary>写真を添付・ラベルの文字を読み取る</summary><div class="field-row"><div class="field"><label for="camera">カメラで撮る</label><input id="camera" type="file" accept="image/*" capture="environment"></div><div class="field"><label for="photo-library">写真を選ぶ</label><input id="photo-library" type="file" accept="image/*"></div></div><img id="record-photo" class="photo" alt="このノートに添付したラベル写真" hidden><div class="actions"><button id="ocr-btn" class="button small" type="button" disabled>写真の文字を読み取る</button><button id="remove-photo-btn" class="button small" type="button" hidden>写真を外す</button></div><p class="hint" style="margin-top:10px">日本語・英語の文字を読み取ります。初回は通信が必要です。結果を確認してから銘柄や数値を入力してください。</p><div id="ocr-status" class="ocr-status" role="status"></div><div id="ocr-output" hidden><label for="ocr-text">読み取った文字</label><textarea id="ocr-text" data-field="ocrText" maxlength="12000"></textarea><div id="ocr-candidates" class="catalog"></div></div></details>
+      <div class="subsection"><h3>ラベル・メーカー情報・測定値</h3><p class="hint">体感から数値を換算せず、分かる値だけ入力します。</p><div class="specs">
+       <div class="spec"><label for="ibu">苦み値<span class="spec-unit">IBU</span></label><input id="ibu" data-field="ibu" type="number" min="0" step="any" inputmode="decimal" placeholder="不明"><select data-field="ibuSource" aria-label="IBUの情報源"></select></div>
+       <div class="spec"><label for="abv">アルコール度数<span class="spec-unit">ABV %</span></label><input id="abv" data-field="abv" type="number" min="0" max="100" step="any" inputmode="decimal" placeholder="不明"><select data-field="abvSource" aria-label="ABVの情報源"></select></div>
+       <div class="spec"><label for="co2">ガスボリューム<span class="spec-unit">CO₂ vol</span></label><input id="co2" data-field="co2" type="number" min="0" step="any" inputmode="decimal" placeholder="不明"><select data-field="co2Source" aria-label="ガスボリュームの情報源"></select></div>
+      </div><div class="field"><label for="spec-note">数値の出所・測定条件<span class="optional">任意</span></label><input id="spec-note" data-field="specNote" placeholder="例：ラベル、メーカーURL、測定日" maxlength="1000"></div></div>
+      <div id="reference" class="profile" hidden></div>
+      <div class="actions"><button class="button primary" id="save-revealed-btn" type="button">銘柄情報を含めて保存</button></div>
+     </div>
+     <details><summary>項目の考え方・参考資料</summary><p class="hint">未選択は「未評価」、0は「感じない」です。立ち香と口中香を別に残し、官能評価と公表・測定値を分けています。参考プロファイルとの違いは、正誤の判定には使いません。</p><div class="source-links"><a href="https://www.bjcp.org/exam-certification/program/studying/beer-exam-study-guide/beer-evaluation/" target="_blank" rel="noopener">BJCP：ビールの官能評価</a><br><a href="https://www.bjcp.org/exam-certification/program/studying/beer-exam-study-guide/hops/" target="_blank" rel="noopener">BJCP：ホップ・IBUと知覚される苦み</a><br><a href="https://www.bjcp.org/exam-certification/program/studying/beer-exam-study-guide/troubleshooting/" target="_blank" rel="noopener">BJCP：香味の特徴</a></div></details>
+    </section>
+   </main>
+   <aside class="side" aria-label="現在の記録"><div class="side-card"><div class="side-title"><strong>この1杯</strong><span id="side-date"></span></div><div class="sample-label" id="sample-mode">BLIND TASTING</div><div class="sample-name" id="side-name">銘柄はあとから</div><dl id="side-summary"></dl><button id="side-review" class="button quiet side-actions" type="button">ノート全体を確認</button></div><div class="side-tip"><strong>全部を埋めなくても大丈夫。</strong><br>感じた項目を選んで、迷うものは空欄に。もう一度押すと選択を解除できます。</div></aside>
+  </div>
+ </div>
+ <section class="panel history-panel" id="history-panel" aria-labelledby="history-heading" hidden><div class="step-heading"><div><div class="step-number">YOUR COLLECTION</div><h2 id="history-heading" tabindex="-1">保存したノート</h2><p class="hint">この端末・このブラウザに保存されている記録です。</p></div><button class="button small" type="button" id="close-history">戻る</button></div><div id="history-list"></div><div class="history-toolbar"><p class="hint">ブラウザのデータを消す前に書き出してください。</p><button class="button small" type="button" id="export-all-btn">全件書き出し</button></div></section>
 </div>
-<div id="answerPhoto" class="hidden">
-<div class="field"><label>カメラで撮る</label><input id="answerCamera" type="file" accept="image/*" capture="environment"></div>
-<div class="field"><label>写真ライブラリから選ぶ</label><input id="answerLibrary" type="file" accept="image/*"></div>
-</div>
-<div id="answerSearch" class="hidden"><div class="field"><label>銘柄検索</label><input id="answerQ" placeholder="Saison, Orval, Urquell..."></div><div id="answerResults"></div></div>
-<div id="answerManual" class="hidden"></div>
-<img id="recordPic" class="photo hidden">
-<div id="revealStatus" class="ref">確認方法を選んでください。</div>
-<div class="field"><label>銘柄名</label><input id="name"></div>
-<div class="field"><label>ブルワリー</label><input id="brewery"></div>
-<div class="field"><label>スタイル</label><input id="style"></div>
-<div class="field"><label>ABV %</label><input id="abv" inputmode="decimal"></div>
-<div id="reference" class="ref hidden"></div>
-<div id="comparison" class="ref hidden"></div>
-</div>
-<div class="card"><h2>アロマ</h2><div class="muted">香りの由来を意識しながら選択</div><div id="aromaGroups"></div></div>
-<div class="card"><h2>フレーバー</h2><div class="muted">口中で感じる香味を由来別に選択</div><div id="flavorGroups"></div></div>
-<div class="card"><h2>バランス・口当たり</h2><div class="field"><label>ボディ</label><div id="body" class="chips"></div></div><div class="field"><label>炭酸</label><div id="carb" class="chips"></div></div><div class="field"><label>アルコールの温感</label><div id="warmth" class="chips"></div></div><div class="field"><label>メモ</label><textarea id="memo"></textarea></div></div>
-<div class="card"><h2>テイスティングノート</h2><div id="preview" class="preview">入力するとここに表示されます。</div><div class="row" style="margin-top:12px"><button class="btn primary" onclick="revealBeer()">銘柄を確認・答え合わせ</button><button class="btn" onclick="save()">保存</button><button class="btn" onclick="makePreview()">更新</button></div></div>
-</section></div>
-<div class="footer"><div><button class="btn" onclick="location.reload()">新規</button><button class="btn primary" onclick="revealBeer()">テイスティング終了・答え合わせ</button></div></div>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<footer class="footer" id="footer"><div class="footer-inner"><div class="footer-progress" id="footer-progress"><strong>01 / 06</strong><br>色をみる</div><div class="footer-buttons"><button class="button quiet" id="prev-btn" type="button" hidden>戻る</button><button class="button quiet" id="new-btn" type="button">新しい1杯</button><button class="button primary" id="next-btn" type="button">次へ：立ち香</button></div></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<noscript><p style="padding:24px">このアプリの記録機能にはJavaScriptが必要です。</p></noscript>
 <script>
+'use strict';
+const NOTES_KEY='beerNotes', DRAFT_KEY='beerTastingDraft_v4';
+const steps=['色','立ち香','味・口中香','炭酸・アルコール','オフフレーバー','記録・銘柄'];
+const titles=['色をみる','立ち香をとる','口に含む','炭酸・アルコール感','オフフレーバー','1杯の記録'];
+const strength=['感じない','ごく弱い','弱い','中程度','強い','非常に強い'];
+const colors=[['淡い麦わら','#f2e8aa'],['黄金色','#e9c252'],['濃い金色','#dba335'],['琥珀色','#c67f27'],['銅色','#a95a2c'],['赤褐色','#85412b'],['茶色','#6c3d29'],['濃茶色','#402d27'],['黒色','#252321'],['赤・ピンク系','#b66b7a']];
+const groups=[
+ {label:'麦芽・穀物に多い香り',en:'MALT & GRAIN',items:['穀物','パン','クラッカー','ビスケット','トースト','キャラメル','蜂蜜','ナッツ','チョコレート','コーヒー','ロースト']},
+ {label:'ホップに多い香り',en:'HOPS',items:['花','草','ハーブ','松','樹脂','柑橘','レモン','グレープフルーツ','オレンジ','白ぶどう','マンゴー','パッションフルーツ','トロピカル']},
+ {label:'酵母・発酵に多い香り',en:'FERMENTATION',items:['バナナ','洋梨','りんご','桃','アプリコット','クローブ','胡椒','スパイシー','酵母・パン生地','硫黄']},
+ {label:'熟成・微生物に関連する香り',en:'MATURATION',items:['ブレット','土','馬小屋','チェリー','プラム','レーズン','ドライフルーツ','酢','ワイン様']},
+ {label:'副原料・樽・その他の香り',en:'OTHER',items:['樽','バニラ','ココナッツ','スモーク','コリアンダー','アルコール','ミネラル']}
+];
+const choices={clarity:['透明','うっすら濁り','濁り','不透明'],foam:['すぐ消える','やや短い','中程度','長く残る'],body:['ライト','ミディアムライト','ミディアム','ミディアムフル','フル'],harmony:['よくまとまる','ややまとまる','判断保留','やや突出がある','突出が強い'],bitterFinish:['残らない','すっと消える','中程度','長く残る'],finish:['短い','やや短い','中程度','やや長い','長い']};
+const multiChoices={dominant:['甘味','苦み','酸味','麦芽の風味','ホップの風味','発酵由来の風味','その他'],bitterQuality:['やわらかい','シャープ','力強い','粗い・えぐい'],aftertaste:['苦み','甘味','酸味','ロースト','果実','スパイス','樽','その他'],bubbleTexture:['きめ細かい','クリーミー','やわらかい','はじける','刺すような刺激'],alcoholQuality:['穏やか','心地よい温かさ','熱い・刺激的','溶剤を思わせる'],mouth:['さらり','なめらか','クリーミー','粘性がある','渋み・収れん感','ざらつき']};
+const offTypes=[{id:'acetaldehyde',label:'青りんご'},{id:'diacetyl',label:'バター・バタースコッチ'},{id:'dms',label:'ゆでトウモロコシ'},{id:'oxidation',label:'湿った紙・段ボール'},{id:'lightstruck',label:'日光臭・スカンク'},{id:'sulfur',label:'腐卵'},{id:'phenolic',label:'薬品・絆創膏'},{id:'solvent',label:'溶剤'},{id:'acetic',label:'酢'},{id:'mold',label:'カビ'},{id:'metallic',label:'金属'},{id:'other',label:'その他'}];
+const offJudgments=['判断保留','スタイル上自然と思う','気になる'];
+// Existing five-beer catalogue; reference descriptors are learning aids, not a scoring key.
 const beers=[
-{name:"Saison Dupont",brewery:"Brasserie Dupont",style:"Saison",abv:"6.5",aroma:["胡椒","柑橘","洋梨","ハーブ","穀物"],flavor:["ドライ","胡椒","レモン","パン","ハーブ"]},
-{name:"Pilsner Urquell",brewery:"Plzeňský Prazdroj",style:"Czech Premium Pale Lager",abv:"4.4",aroma:["パン","蜂蜜","ハーブ","花"],flavor:["パン","ハーブ","苦味"]},
-{name:"Weihenstephaner Hefeweissbier",brewery:"Weihenstephan",style:"Weissbier",abv:"5.4",aroma:["バナナ","クローブ","パン"],flavor:["バナナ","クローブ","パン"]},
-{name:"Orval",brewery:"Brasserie d’Orval",style:"Belgian Pale Ale / Brett",abv:"6.2",aroma:["胡椒","柑橘","ハーブ","ブレット","土"],flavor:["ドライ","柑橘","ハーブ","ブレット"]},
-{name:"Duchesse de Bourgogne",brewery:"Brouwerij Verhaeghe",style:"Flanders Red Ale",abv:"6.2",aroma:["チェリー","プラム","樽","バニラ","酢酸"],flavor:["チェリー","赤果実","樽","ワイン様","酢酸"]}];
-const aromaGroups={
-"モルト由来":["穀物","パン","クラッカー","ビスケット","トースト","キャラメル","蜂蜜","ナッツ","チョコレート","コーヒー","ロースト"],
-"ホップ由来":["花","草","ハーブ","松","樹脂","柑橘","レモン","グレープフルーツ","オレンジ","白ぶどう","マンゴー","パッションフルーツ","トロピカル"],
-"発酵由来":["バナナ","洋梨","りんご","桃","アプリコット","クローブ","胡椒","スパイシー","硫黄"],
-"熟成・微生物由来":["ブレット","土","馬小屋","チェリー","プラム","レーズン","乳酸","酢酸"],
-"樽・その他":["樽","バニラ","ココナッツ","スモーク","アルコール","ミネラル"]
-};
-const flavorGroups={
-"モルト由来":["穀物","パン","クラッカー","ビスケット","トースト","キャラメル","蜂蜜","ナッツ","チョコレート","コーヒー","ロースト"],
-"ホップ由来":["花","草","ハーブ","松","樹脂","柑橘","レモン","グレープフルーツ","オレンジ","白ぶどう","マンゴー","パッションフルーツ","トロピカル","苦味"],
-"発酵由来":["バナナ","洋梨","りんご","桃","クローブ","胡椒","スパイシー","ドライ"],
-"熟成・微生物由来":["ブレット","土","乳酸","酢酸","赤果実","チェリー","プラム","レーズン","ワイン様"],
-"樽・その他":["樽","バニラ","ココナッツ","スモーク","甘味","酸味"]
-};
-let selected={aroma:[],flavor:[],body:[],carb:[],warmth:[]},photo="";
-function mode(m){document.getElementById(m).classList.remove("hidden");if(m==="search")catalog()}
-function start(){home.classList.add("hidden");form.classList.remove("hidden");window.scrollTo(0,0)}
-function chips(id,arr,key,single=false){let e=document.getElementById(id);e.innerHTML=arr.map(x=>'<button class="chip" type="button">'+x+'</button>').join("");[...e.children].forEach(b=>b.onclick=()=>{if(single){selected[key]=[b.textContent];[...e.children].forEach(x=>x.classList.toggle("on",x===b))}else{b.classList.toggle("on");selected[key]=[...e.querySelectorAll(".on")].map(x=>x.textContent)};makePreview()})}
-function groupedChips(targetId,groups,key){
-  const wrap=document.getElementById(targetId);wrap.innerHTML="";
-  Object.entries(groups).forEach(([group,items])=>{
-    const sec=document.createElement("div");sec.className="sensoryGroup";
-    sec.innerHTML='<div class="sensoryTitle">'+group+'</div><div class="chips"></div>';
-    const box=sec.querySelector(".chips");
-    items.forEach(item=>{
-      const b=document.createElement("button");b.className="chip";b.type="button";b.textContent=item;
-      b.onclick=()=>{b.classList.toggle("on");selected[key]=[...wrap.querySelectorAll(".chip.on")].map(x=>x.textContent);makePreview()};
-      box.appendChild(b);
-    });
-    wrap.appendChild(sec);
-  });
+ {id:'dupont',name:'Saison Dupont',alias:'セゾン デュポン',brewery:'Brasserie Dupont',style:'Saison',aroma:['胡椒','柑橘','洋梨','ハーブ','穀物'],flavor:['胡椒','レモン','パン','ハーブ']},
+ {id:'urquell',name:'Pilsner Urquell',alias:'ピルスナー ウルケル',brewery:'Plzeňský Prazdroj',style:'Czech Premium Pale Lager',aroma:['パン','蜂蜜','ハーブ','花'],flavor:['パン','ハーブ']},
+ {id:'weihen',name:'Weihenstephaner Hefeweissbier',alias:'ヴァイエンシュテファン ヘフェヴァイスビア',brewery:'Weihenstephan',style:'Weissbier',aroma:['バナナ','クローブ','パン'],flavor:['バナナ','クローブ','パン']},
+ {id:'orval',name:'Orval',alias:'オルヴァル オーバル',brewery:'Brasserie d’Orval',style:'ベルギーエール（ブレット使用）',aroma:['胡椒','柑橘','ハーブ','ブレット','土'],flavor:['柑橘','ハーブ','ブレット']},
+ {id:'duchesse',name:'Duchesse de Bourgogne',alias:'ドゥシャス デ ブルゴーニュ',brewery:'Brouwerij Verhaeghe',style:'Flanders Red Ale',aroma:['チェリー','プラム','樽','バニラ','酢'],flavor:['チェリー','樽','ワイン様','酢']}
+];
+const scalarKeys=['sample','color','colorNote','clarity','foam','aromaIntensity','aromaNote','sweetness','bitterness','acidity','saltiness','umami','flavorNote','harmony','bitterFinish','finish','carbonation','warmth','body','mouthNote','offStatus','offNote','memo','name','brewery','style','ibu','abv','co2','ibuSource','abvSource','co2Source','specNote','ocrText'];
+const multiKeys=['aroma','flavor',...Object.keys(multiChoices),'offs'];
+const $=id=>document.getElementById(id);
+const $$=(s,root=document)=>Array.from(root.querySelectorAll(s));
+const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=obj=>JSON.parse(JSON.stringify(obj));
+function uuid(){return typeof crypto.randomUUID==='function'?crypto.randomUUID():'note-'+Date.now()+'-'+Math.random().toString(36).slice(2);}
+function blank(){return {schemaVersion:4,id:uuid(),date:new Date().toISOString(),updatedAt:null,step:0,revealed:false,fields:Object.fromEntries(scalarKeys.map(k=>[k,null])),selected:Object.fromEntries(multiKeys.map(k=>[k,[]])),offDetails:{},photo:'',referenceId:null};}
+let state=blank(),dirty=false,draftTimer=null,toastTimer=null,draftWritable=true,ocrBusy=false,photoBusy=false,ocrSession=0;
+function warning(message){$('storage-banner').textContent=message;$('storage-banner').hidden=false;}
+function toast(message,error=false){clearTimeout(toastTimer);const box=$('toast');box.textContent=message;box.classList.toggle('error',error);box.hidden=false;toastTimer=setTimeout(()=>box.hidden=true,error?8000:3800);}
+function readNotes(){try{const parsed=JSON.parse(localStorage.getItem(NOTES_KEY)||'[]');if(!Array.isArray(parsed))throw new Error('invalid notes');return parsed;}catch(e){warning('保存済みデータを読み込めませんでした。上書きせず保持しています。今の記録はJSONで書き出せます。');return null;}}
+function normalizeRecord(raw,index=0){
+ const n=blank();if(!raw||typeof raw!=='object')return n;
+ if(raw.schemaVersion===4){n.id=typeof raw.id==='string'?raw.id:n.id;n.date=typeof raw.date==='string'?raw.date:n.date;n.updatedAt=raw.updatedAt||null;n.step=Number.isInteger(raw.step)?Math.max(0,Math.min(5,raw.step)):0;n.revealed=!!raw.revealed;scalarKeys.forEach(k=>{const v=raw.fields?.[k];if(v===null||typeof v==='string'||typeof v==='number')n.fields[k]=v;});multiKeys.forEach(k=>{if(Array.isArray(raw.selected?.[k]))n.selected[k]=raw.selected[k].filter(x=>typeof x==='string');});n.offDetails=raw.offDetails&&typeof raw.offDetails==='object'?clone(raw.offDetails):{};n.referenceId=beers.some(b=>b.id===raw.referenceId)?raw.referenceId:null;
+ }else{n.id=raw.id||'legacy-'+(raw.date||'unknown')+'-'+index;n.date=raw.date||n.date;n.updatedAt=raw.updatedAt||null;['name','brewery','style','abv','memo'].forEach(k=>n.fields[k]=typeof raw[k]==='string'||typeof raw[k]==='number'?String(raw[k]):null);n.fields.body=raw.selected?.body?.[0]||null;const oldCarb=raw.selected?.carb?.[0],oldWarmth=raw.selected?.warmth?.[0];n.fields.carbonation=({'感じない':0,'弱い':2,'やや弱い':2,'中程度':3,'やや強い':4,'強い':4})[oldCarb]??null;n.fields.warmth=({'感じない':0,'弱い':2,'中程度':3,'強い':4,'非常に強い':5})[oldWarmth]??null;['aroma','flavor'].forEach(k=>n.selected[k]=Array.isArray(raw.selected?.[k])?raw.selected[k].filter(x=>typeof x==='string'):[]);n.revealed=!!(n.fields.name||n.fields.brewery||n.fields.style||n.fields.abv);n.referenceId=beers.find(b=>b.name===n.fields.name)?.id||null;n.legacyPreview=typeof raw.preview==='string'?raw.preview:'';n.legacySource=clone(raw);delete n.legacySource.photo;delete n.legacySource.preview;}
+ n.photo=typeof raw.photo==='string'&&/^data:image\/(jpeg|png|webp|gif|avif);base64,/.test(raw.photo)?raw.photo:'';
+ if(raw.schemaVersion===4&&raw.legacySource){n.legacySource=clone(raw.legacySource);n.legacyPreview=raw.legacyPreview||'';}
+ return n;
 }
-function catalog(){let s=(q.value||"").toLowerCase();let a=beers.filter(b=>!s||JSON.stringify(b).toLowerCase().includes(s));results.innerHTML=a.map((b,i)=>'<button class="btn" style="width:100%;margin:4px 0;text-align:left" onclick="pick(\''+b.name.replaceAll("'","\\'")+'\')"><b>'+b.name+'</b><br><span class="muted">'+b.brewery+' / '+b.style+' / '+b.abv+'%</span></button>').join("")}
-function pick(n){let b=beers.find(x=>x.name===n);name.value=b.name;brewery.value=b.brewery;style.value=b.style;abv.value=b.abv;reference.classList.remove("hidden");reference.innerHTML="<b>教科書的に期待される要素</b><br>アロマ："+b.aroma.join("、")+"<br>フレーバー："+b.flavor.join("、");start()}
-function normalize(s){return (s||"").toLowerCase().replace(/[^a-z0-9ぁ-んァ-ヶ一-龠]/g,"")}
-function matchBeer(text){
-  const t=normalize(text);
-  let best=null,bestScore=0;
-  beers.forEach(b=>{
-    const terms=[b.name,b.brewery].map(normalize).filter(Boolean);
-    let score=0;
-    terms.forEach(term=>{
-      if(t.includes(term)) score+=term.length;
-      else{
-        const words=term.match(/[a-z0-9]{4,}/g)||[];
-        score+=words.filter(w=>t.includes(w)).reduce((n,w)=>n+w.length,0);
-      }
-    });
-    if(score>bestScore){bestScore=score;best=b}
-  });
-  return bestScore>=5?best:null;
+function hasContent(n=state){return scalarKeys.some(k=>n.fields[k]!==null&&n.fields[k]!=='')||multiKeys.some(k=>n.selected[k].length)||!!n.photo;}
+function showStrength(value){return value===null||value===undefined||value===''?'未評価':`${value}/5（${strength[Number(value)]||'旧記録'}）`;}
+function join(values){return values?.length?values.join('、'):'未評価';}
+function value(key){const v=state.fields[key];return v===null||v===undefined||v===''?'未評価':String(v);}
+function formattedDate(date,full=false){const d=new Date(date);if(Number.isNaN(d.getTime()))return '日付不明';return new Intl.DateTimeFormat('ja-JP',full?{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}:{month:'2-digit',day:'2-digit'}).format(d);}
+function makeScale(wrap,key,label,getter,setter){
+ const id='scale-'+key;wrap.classList.add('scale-wrap');wrap.innerHTML=`<div class="scale-head"><label id="${esc(id)}">${esc(label)}</label><span class="scale-value"></span></div><div class="scale" role="group" aria-labelledby="${esc(id)}"></div>`;
+ const box=wrap.querySelector('.scale');strength.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',`${label}：${s} ${i}/5`);b.dataset.level=String(i);b.innerHTML=`<b>${i}</b>${esc(s)}`;b.addEventListener('click',()=>{setter(getter()===i?null:i);syncScale(wrap,getter());change();});box.appendChild(b);});syncScale(wrap,getter());
 }
-function inferABV(text){
-  const m=(text||"").match(/(?:alc\.?\s*)?(\d{1,2}(?:[.,]\d)?)\s*%/i);
-  return m?m[1].replace(",","."):"";
+function syncScale(wrap,v){$$('button',wrap).forEach(b=>b.setAttribute('aria-pressed',String(v!==null&&v!==undefined&&String(v)===b.dataset.level)));wrap.querySelector('.scale-value').textContent=v===null||v===undefined?'未評価':showStrength(v);}
+function makeChips(wrap,items,getter,setter,multiple=false){wrap.replaceChildren();items.forEach(item=>{const label=typeof item==='string'?item:item.label,id=typeof item==='string'?item:item.id;const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=label;b.dataset.value=id;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{const prev=getter();setter(multiple?(prev.includes(id)?prev.filter(x=>x!==id):[...prev,id]):(prev===id?null:id));syncChips(wrap,getter(),multiple);change();});wrap.appendChild(b);});syncChips(wrap,getter(),multiple);}
+function syncChips(wrap,v,multiple=false){$$('button',wrap).forEach(b=>b.setAttribute('aria-pressed',String(multiple?(v||[]).includes(b.dataset.value):v===b.dataset.value)));}
+function renderAroma(target,key){const root=$(target);root.replaceChildren();groups.forEach(group=>{const sec=document.createElement('section');sec.className='aroma-group';sec.innerHTML=`<div class="group-head"><span class="group-name">${esc(group.label)}</span><span class="group-en">${esc(group.en)}</span></div><div class="chips"></div>`;makeChips(sec.querySelector('.chips'),group.items,()=>state.selected[key],v=>{state.selected[key]=v;syncAllAroma(key);},true);root.appendChild(sec);});}
+function syncAllAroma(key){$$('.chips',$(key==='aroma'?'aroma-groups':'flavor-groups')).forEach(w=>syncChips(w,state.selected[key],true));}
+function renderOffDetails(){
+ $('off-selection').hidden=state.fields.offStatus!=='detected';const wrap=$('off-details');wrap.replaceChildren();
+ state.selected.offs.forEach(id=>{const off=offTypes.find(x=>x.id===id);if(!off)return;state.offDetails[id]??={level:null,judgment:'判断保留'};const sec=document.createElement('section');sec.className='off-detail';const heading=document.createElement('strong');heading.textContent=off.label;sec.appendChild(heading);const scale=document.createElement('div');sec.appendChild(scale);makeScale(scale,'off-'+id,off.label+'の強さ',()=>state.offDetails[id].level,v=>state.offDetails[id].level=v);const field=document.createElement('div');field.className='field';const label=document.createElement('div');label.className='legend';label.textContent='この特徴の評価';field.appendChild(label);const box=document.createElement('div');box.className='chips';makeChips(box,offJudgments,()=>state.offDetails[id].judgment,v=>state.offDetails[id].judgment=v);field.appendChild(box);sec.appendChild(field);wrap.appendChild(sec);});
 }
-async function identifyFromPhoto(data){
-  revealStatus.innerHTML="<b>写真を解析中…</b><br><span class=\"muted\">初回は数十秒かかる場合があります。</span>";
-  if(!window.Tesseract){revealStatus.textContent="OCRライブラリを読み込めませんでした。下の欄へ銘柄を手入力してください。";return null}
-  try{
-    const result=await Tesseract.recognize(data,"eng",{logger:m=>{
-      if(m.status==="recognizing text") revealStatus.textContent="文字を解析中… "+Math.round((m.progress||0)*100)+"%";
-    }});
-    const text=(result.data.text||"").trim();
-    const b=matchBeer(text);
-    const av=inferABV(text);
-    if(av) abv.value=av;
-    if(b){
-      name.value=b.name;brewery.value=b.brewery;style.value=b.style;abv.value=b.abv;
-      revealStatus.innerHTML="<b>推定："+b.name+"</b><br><span class=\"muted\">写真の文字から登録銘柄と照合しました。</span>";
-      showComparison(b);
-      return b;
-    }
-    revealStatus.innerHTML="<b>銘柄を自動特定できませんでした</b><br><span class=\"muted\">読み取った文字：<br>"+(text||"なし").replace(/</g,"&lt;").slice(0,500)+"<br>下の銘柄名を手入力できます。</span>";
-    return null;
-  }catch(err){
-    revealStatus.textContent="OCRエラー："+String(err&&err.message||err)+"。銘柄は手入力できます。";
-    return null;
-  }
+function change(){dirty=true;state.updatedAt=new Date().toISOString();renderSummary();renderReference();markSections();$('draft-status').textContent='下書きを保存中…';clearTimeout(draftTimer);draftTimer=setTimeout(persistDraft,240);}
+function persistDraft(){clearTimeout(draftTimer);if(!draftWritable)return;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(state));$('draft-status').textContent=dirty?'下書きを端末に保存済み':'保存済み';}catch(e){$('draft-status').textContent='下書き未保存';warning('ブラウザの保存容量または設定により、下書きを保存できません。写真を外すか、JSONで書き出してください。');}}
+function setStep(step,focus=true){state.step=Math.max(0,Math.min(5,step));$$('.step-panel').forEach((p,i)=>p.hidden=i!==state.step);$$('button',$('step-nav')).forEach((b,i)=>{if(i===state.step)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});$('prev-btn').hidden=state.step===0;$('new-btn').hidden=state.step!==0;$('next-btn').textContent=state.step===5?'ノートを保存':'次へ：'+steps[state.step+1];$('footer-progress').innerHTML=`<strong>${String(state.step+1).padStart(2,'0')} / 06</strong><br>${esc(titles[state.step])}`;if(focus){$('heading-'+state.step).focus({preventScroll:true});$('step-nav').scrollIntoView({behavior:'auto',block:'start'});}renderSummary();if(hasContent())persistDraft();}
+function markSections(){const f=state.fields,s=state.selected;const done=[!!(f.color||f.clarity||f.foam||f.colorNote),f.aromaIntensity!==null||s.aroma.length>0||!!f.aromaNote,['sweetness','bitterness','acidity','saltiness','umami'].some(k=>f[k]!==null)||s.flavor.length>0||!!(f.harmony||f.flavorNote||f.bitterFinish||f.finish)||s.dominant.length>0||s.bitterQuality.length>0||s.aftertaste.length>0,f.carbonation!==null||f.warmth!==null||!!(f.body||f.mouthNote)||s.mouth.length>0||s.alcoholQuality.length>0||s.bubbleTexture.length>0,!!f.offStatus||!!f.offNote,!!(f.memo||f.name||f.brewery||f.style)||['ibu','abv','co2'].some(k=>f[k]!==null&&f[k]!=='')];$$('button',$('step-nav')).forEach((b,i)=>b.classList.toggle('has-entry',!!done[i]));}
+function buildNote(n=state){
+ const f=n.fields,s=n.selected,v=k=>f[k]===null||f[k]===undefined||f[k]===''?'未評価':String(f[k]);const out=[`【${n.revealed&&f.name?f.name:(f.sample||'銘柄未確認')}】`,formattedDate(n.date,true)];
+ if(f.sample)out.push('サンプル：'+f.sample);if(n.revealed)out.push([f.brewery,f.style].filter(Boolean).join(' / '));
+ out.push('','■ 色・外観',`色：${v('color')}${f.colorNote?'（'+f.colorNote+'）':''}`,`透明度：${v('clarity')} / 泡の持続：${v('foam')}`,'','■ 立ち香',`強さ：${showStrength(f.aromaIntensity)}`,join(s.aroma));if(f.aromaNote)out.push(f.aromaNote);
+ out.push('','■ 味・口中香',`甘味：${showStrength(f.sweetness)}`,`苦み：${showStrength(f.bitterness)}`,`酸味：${showStrength(f.acidity)}`);if(f.saltiness!==null)out.push('塩味：'+showStrength(f.saltiness));if(f.umami!==null)out.push('うま味：'+showStrength(f.umami));out.push('口中香・フレーバー：'+join(s.flavor));if(f.flavorNote)out.push(f.flavorNote);out.push('構成バランス（目立つ要素）：'+join(s.dominant),'全体の調和：'+v('harmony'),'苦みの質：'+join(s.bitterQuality),'苦みの残り方：'+v('bitterFinish'),'余韻：'+v('finish')+' / 残る要素：'+join(s.aftertaste));
+ out.push('','■ 炭酸・アルコール感・口当たり','炭酸の強さ：'+showStrength(f.carbonation),'泡・刺激：'+join(s.bubbleTexture),'アルコール温感：'+showStrength(f.warmth),'アルコール感の質：'+join(s.alcoholQuality),'ボディ：'+v('body'),'口当たり：'+join(s.mouth));if(f.mouthNote)out.push(f.mouthNote);
+ out.push('','■ オフフレーバー');if(f.offStatus==='none')out.push('確認した範囲では感じない');else if(f.offStatus==='unsure')out.push('判断がつかない');else if(f.offStatus==='detected'){if(!s.offs.length)out.push('感じた特徴あり（詳細未選択）');s.offs.forEach(id=>{const label=offTypes.find(x=>x.id===id)?.label||id,d=n.offDetails[id]||{};out.push(`${label}：${showStrength(d.level)} / ${d.judgment||'判断保留'}`);});}else out.push('未評価');if(f.offNote)out.push(f.offNote);
+ if(n.revealed){out.push('','■ 公表・測定値');[['ibu','IBU',''],['abv','ABV','%'],['co2','CO₂',' vol']].forEach(([k,label,unit])=>out.push(label+'：'+(f[k]===null||f[k]===''?'不明':f[k]+unit)+'（'+(f[k+'Source']||'出所未記録')+'）'));if(f.specNote)out.push(f.specNote);}
+ if(f.memo)out.push('','■ 全体の感想',f.memo);if(n.legacyPreview)out.push('','■ 旧版で保存した記録（原文）',n.legacyPreview);return out.join('\n');
 }
-function showComparison(b){
-  reference.classList.remove("hidden");
-  reference.innerHTML="<b>教科書的プロファイル</b><br>アロマ："+b.aroma.join("、")+"<br>フレーバー："+b.flavor.join("、");
-  const aHit=selected.aroma.filter(x=>b.aroma.includes(x));
-  const fHit=selected.flavor.filter(x=>b.flavor.includes(x));
-  const aMiss=b.aroma.filter(x=>!selected.aroma.includes(x));
-  const fMiss=b.flavor.filter(x=>!selected.flavor.includes(x));
-  const ownA=selected.aroma.filter(x=>!b.aroma.includes(x));
-  const ownF=selected.flavor.filter(x=>!b.flavor.includes(x));
-  comparison.classList.remove("hidden");
-  comparison.innerHTML="<b>あなたの感覚との比較</b><br><br>"+
-    "✓ 一致したアロマ："+(aHit.join("、")||"なし")+"<br>"+
-    "✓ 一致したフレーバー："+(fHit.join("、")||"なし")+"<br><br>"+
-    "教科書的だが感じなかったアロマ："+(aMiss.join("、")||"なし")+"<br>"+
-    "教科書的だが感じなかったフレーバー："+(fMiss.join("、")||"なし")+"<br><br>"+
-    "自分だけが感じたアロマ："+(ownA.join("、")||"なし")+"<br>"+
-    "自分だけが感じたフレーバー："+(ownF.join("、")||"なし");
+function renderSummary(){
+ $('preview').textContent=buildNote();$('side-date').textContent=formattedDate(state.date);$('side-name').textContent=state.revealed&&state.fields.name?state.fields.name:(state.fields.sample||'銘柄はあとから');$('sample-mode').textContent=state.revealed?'TASTING NOTE':'BLIND TASTING';
+ const rows=[['色・外観',[state.fields.color,state.fields.clarity].filter(Boolean).join(' / ')],['立ち香',state.selected.aroma.join('、')||state.fields.aromaNote],['味・口中香',state.selected.flavor.join('、')||state.fields.flavorNote],['苦み',state.fields.bitterness===null?'':showStrength(state.fields.bitterness)],['炭酸 / アルコール温感',state.fields.carbonation===null&&state.fields.warmth===null?'':showStrength(state.fields.carbonation)+' / '+showStrength(state.fields.warmth)]];
+ $('side-summary').innerHTML=rows.map(([label,text])=>`<div class="side-block${text?'':' empty'}"><dt>${esc(label)}</dt><dd>${esc(text||'まだ記録していません')}</dd></div>`).join('');$('blind-badge').textContent=state.revealed?'銘柄情報を表示中':'銘柄未確認';$('blind-badge').classList.toggle('revealed-badge',state.revealed);
 }
-function answerMode(id){
-  ["answerPhoto","answerSearch","answerManual"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));
-  if(id==="answerSearch") answerCatalog();
-  if(id==="answerManual") revealStatus.textContent="判明した銘柄情報を下の欄へ入力してください。";
+function hydrate(){
+ $$('[data-field]').forEach(input=>input.value=state.fields[input.dataset.field]??'');$$('[data-choice]').forEach(w=>syncChips(w,state.fields[w.dataset.choice]));$$('[data-multi]').forEach(w=>syncChips(w,state.selected[w.dataset.multi],true));$$('[data-scale]').forEach(w=>syncScale(w,state.fields[w.dataset.scale]));$$('button',$('color-picker')).forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.color===state.fields.color)));syncAllAroma('aroma');syncAllAroma('flavor');syncChips($('off-status'),state.fields.offStatus);syncChips($('off-picker'),state.selected.offs,true);renderOffDetails();$('reveal-section').hidden=!state.revealed;$('reveal-btn').hidden=state.revealed;renderPhoto();$('ocr-output').hidden=!state.fields.ocrText;markSections();renderReference();setStep(state.step,false);
 }
-function answerCatalog(){
-  const s=(answerQ&&answerQ.value||"").toLowerCase();
-  const a=beers.filter(b=>!s||JSON.stringify(b).toLowerCase().includes(s));
-  answerResults.innerHTML=a.map(b=>'<button class="btn" style="width:100%;margin:4px 0;text-align:left" type="button" data-beer="'+b.name.replace(/"/g,"&quot;")+'"><b>'+b.name+'</b><br><span class="muted">'+b.brewery+' / '+b.style+'</span></button>').join("");
-  [...answerResults.querySelectorAll("button")].forEach(btn=>btn.onclick=()=>{
-    const b=beers.find(x=>x.name===btn.dataset.beer);
-    name.value=b.name;brewery.value=b.brewery;style.value=b.style;abv.value=b.abv;
-    revealStatus.innerHTML="<b>"+b.name+"</b> を選択しました。";
-    showComparison(b);
-  });
+function validateNumbers(){for(const id of ['ibu','abv','co2']){const input=$(id);if(!input.checkValidity()){state.revealed=true;$('reveal-section').hidden=false;$('reveal-btn').hidden=true;setStep(5);input.focus();input.reportValidity();toast('数値を確認してください。空欄のままでも保存できます。',true);return false;}}return true;}
+function serializeRecord(){const record=clone(state);record.updatedAt=new Date().toISOString();record.preview=buildNote(record);return record;}
+function saveNote(){
+ if(photoBusy||ocrBusy){toast('写真の処理が終わってから保存してください。',true);return false;}if(!hasContent()){toast('感じた項目をひとつ選ぶか、メモを入力してください。');return false;}if(!validateNumbers())return false;
+ const notes=readNotes();if(notes===null)return false;const index=notes.findIndex((n,i)=>normalizeRecord(n,i).id===state.id),record=serializeRecord();
+ if(index>=0)notes[index]=record;else notes.unshift(record);
+ try{localStorage.setItem(NOTES_KEY,JSON.stringify(notes));state.updatedAt=record.updatedAt;dirty=false;persistDraft();updateHistoryCount();$('save-btn').textContent='保存したノートを更新';$('save-revealed-btn').textContent='銘柄情報を含めて更新';toast(index>=0?'ノートを更新しました。':'ノートを保存しました。');return true;}
+ catch(e){warning('ノートを保存できませんでした。ブラウザの保存容量や設定を確認するか、JSONで書き出してください。');toast('保存できませんでした。入力内容は画面に残っています。',true);return false;}
 }
-function revealBeer(){
-  revealCard.classList.remove("hidden");
-  revealCard.scrollIntoView({behavior:"smooth",block:"start"});
+function updateHistoryCount(){const notes=readNotes();$('history-count').textContent=notes?String(notes.length):'—';}
+function newNote(){if(photoBusy||ocrBusy){toast('写真の処理が終わるまでお待ちください。');return;}if(dirty&&hasContent()&&!confirm('この1杯はまだ記録に保存されていません。入力を消して新しい1杯を始めますか？'))return;clearTimeout(draftTimer);state=blank();dirty=false;try{localStorage.removeItem(DRAFT_KEY);}catch(e){}$('save-btn').textContent='このノートを保存';$('save-revealed-btn').textContent='銘柄情報を含めて保存';$('ocr-status').textContent='';$('ocr-candidates').replaceChildren();$('catalog-query').value='';$('catalog-details').open=false;$('photo-details').open=false;hydrate();$('draft-status').textContent='新しいテイスティング';setStep(0);}
+function openHistory(){if(photoBusy||ocrBusy){toast('写真の処理が終わるまでお待ちください。');return;}if(hasContent())persistDraft();const notes=readNotes();$('editor').hidden=true;$('history-panel').hidden=false;$('footer').hidden=true;const list=$('history-list');list.replaceChildren();
+ if(notes===null){const p=document.createElement('p');p.className='empty-state';p.textContent='保存済みデータを読み込めませんでした。元のデータは変更していません。';list.appendChild(p);}
+ else if(!notes.length){const p=document.createElement('div');p.className='empty-state';p.innerHTML='<strong>まだノートはありません</strong>テイスティングを記録して「保存」を押すと、ここに並びます。';list.appendChild(p);}
+ else notes.forEach((raw,index)=>{const n=normalizeRecord(raw,index),item=document.createElement('div');item.className='history-item';const info=document.createElement('div');info.className='history-info';const title=document.createElement('strong');title.textContent=n.fields.name||n.fields.sample||'銘柄未確認';const meta=document.createElement('p');meta.textContent=formattedDate(n.date,true)+(n.fields.style?' · '+n.fields.style:'');info.append(title,meta);const desc=document.createElement('p');desc.textContent=[n.fields.color,n.selected.aroma.slice(0,3).join('、')].filter(Boolean).join(' / ')||'記録を開いて確認';info.appendChild(desc);const btn=document.createElement('button');btn.className='button small';btn.type='button';btn.textContent='開く';btn.setAttribute('aria-label',(n.fields.name||n.fields.sample||'銘柄未確認')+'の記録を開く');btn.onclick=()=>{if(dirty&&state.id!==n.id&&!confirm('入力中の下書きを閉じて、保存した記録を開きますか？'))return;clearTimeout(draftTimer);state=n;state.step=5;dirty=false;closeHistory();hydrate();$('ocr-status').textContent='';$('ocr-candidates').replaceChildren();$('save-btn').textContent='保存したノートを更新';$('save-revealed-btn').textContent='銘柄情報を含めて更新';setStep(5);$('draft-status').textContent='保存済みの記録';};item.append(info,btn);list.appendChild(item);});
+ $('export-all-btn').disabled=!notes?.length;$('history-heading').focus({preventScroll:true});window.scrollTo(0,0);
 }
-function file(e){
-  let f=e.target.files&&e.target.files[0];if(!f)return;
-  let r=new FileReader();
-  r.onload=x=>{
-    photo=x.target.result;pic.src=photo;pic.classList.remove("hidden");
-    recordPic.src=photo;recordPic.classList.remove("hidden");
-    photoGo.classList.remove("hidden");
-  };
-  r.readAsDataURL(f)
+function closeHistory(){$('history-panel').hidden=true;$('editor').hidden=false;$('footer').hidden=false;}
+function downloadJSON(data,filename){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function exportNote(){if(!validateNumbers())return;downloadJSON(serializeRecord(),'beer-tasting-note-'+new Date().toISOString().slice(0,10)+'.json');}
+async function copyNote(){const text=buildNote();try{if(!navigator.clipboard?.writeText)throw new Error('no clipboard');await navigator.clipboard.writeText(text);toast('テイスティングノートをコピーしました。');}catch(e){const area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}area.remove();if(ok)toast('テイスティングノートをコピーしました。');else toast('コピーできませんでした。ノート本文を選択してコピーしてください。',true);}}
+function reveal(){state.revealed=true;$('reveal-section').hidden=false;$('reveal-btn').hidden=true;change();$('beer-name').focus({preventScroll:true});$('reveal-section').scrollIntoView({behavior:'auto',block:'start'});}
+function norm(s){return String(s||'').normalize('NFKC').toLowerCase().replace(/[\s\p{P}\p{S}]/gu,'');}
+function renderCatalog(query=''){const q=norm(query),items=beers.filter(b=>!q||norm(b.name+' '+b.alias+' '+b.brewery+' '+b.style).includes(q));const box=$('catalog-results');box.replaceChildren();if(!items.length){const p=document.createElement('p');p.className='hint';p.textContent='登録された銘柄には見つかりませんでした。銘柄名を上の欄に入力できます。';box.appendChild(p);}else items.forEach(b=>box.appendChild(beerButton(b)));}
+function beerButton(b){const button=document.createElement('button');button.className='button';button.type='button';const name=document.createElement('strong');name.textContent=b.name;const desc=document.createElement('span');desc.textContent=b.alias+' / '+b.style;button.append(name,desc);button.onclick=()=>pickBeer(b.id);return button;}
+function pickBeer(id){const b=beers.find(x=>x.id===id);if(!b)return;state.fields.name=b.name;state.fields.brewery=b.brewery;state.fields.style=b.style;state.referenceId=id;state.revealed=true;['name','brewery','style'].forEach(k=>document.querySelector(`[data-field="${k}"]`).value=state.fields[k]);change();toast('銘柄を選択しました。数値はラベルなどで確認して入力できます。');}
+function renderReference(){const b=state.revealed?beers.find(x=>x.id===state.referenceId&&x.name===state.fields.name):null,box=$('reference');box.hidden=!b;if(!b){box.replaceChildren();return;}const a=state.selected.aroma.filter(x=>b.aroma.includes(x)),f=state.selected.flavor.filter(x=>b.flavor.includes(x));box.innerHTML=`<h3>学習用の参考プロファイル</h3><p>${esc(b.name)}</p><p>立ち香：${esc(b.aroma.join('、'))}<br>口中香：${esc(b.flavor.join('、'))}</p><p>記録と共通する立ち香：${esc(a.join('、')||'なし')}<br>記録と共通する口中香：${esc(f.join('、')||'なし')}</p><p class="hint">以前から登録している参考例です。温度・保存状態・個人差で印象は変わります。一致しないことが誤りとは限りません。</p>`;}
+function renderPhoto(){const pic=$('record-photo');pic.hidden=!state.photo;if(state.photo)pic.src=state.photo;else pic.removeAttribute('src');$('ocr-btn').disabled=!state.photo||ocrBusy||photoBusy;$('remove-photo-btn').hidden=!state.photo;$('camera').disabled=ocrBusy||photoBusy;$('photo-library').disabled=ocrBusy||photoBusy;$('remove-photo-btn').disabled=ocrBusy||photoBusy;}
+async function resizePhoto(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{try{const factor=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*factor));canvas.height=Math.max(1,Math.round(img.naturalHeight*factor));const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',0.82));}catch(e){reject(e);}finally{URL.revokeObjectURL(url);}};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('unsupported image'));};img.src=url;});}
+async function attachPhoto(event){const file=event.target.files?.[0];event.target.value='';if(!file)return;if(!file.type.startsWith('image/')){toast('写真ファイルを選んでください。',true);return;}if(file.size>25*1024*1024){toast('25MB以下の写真を選んでください。',true);return;}const noteId=state.id;photoBusy=true;renderPhoto();$('ocr-status').textContent='写真を準備中…';try{const data=await resizePhoto(file);if(state.id!==noteId)return;state.photo=data;state.fields.ocrText=null;$('ocr-text').value='';$('ocr-output').hidden=true;$('ocr-candidates').replaceChildren();$('ocr-status').textContent='写真を添付しました。「写真の文字を読み取る」で解析できます。';change();}catch(e){$('ocr-status').textContent='この写真を表示できません。JPEG・PNGなどの写真を選んでください。';}finally{photoBusy=false;renderPhoto();}}
+let ocrScriptPromise=null;
+function loadOCR(){if(window.Tesseract)return Promise.resolve(window.Tesseract);if(ocrScriptPromise)return ocrScriptPromise;ocrScriptPromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';script.async=true;const timer=setTimeout(()=>{script.remove();ocrScriptPromise=null;reject(new Error('OCR library timeout'));},20000);script.onload=()=>{clearTimeout(timer);if(window.Tesseract)resolve(window.Tesseract);else{ocrScriptPromise=null;reject(new Error('OCR library unavailable'));}};script.onerror=()=>{clearTimeout(timer);script.remove();ocrScriptPromise=null;reject(new Error('OCR library unavailable'));};document.head.appendChild(script);});return ocrScriptPromise;}
+async function runOCR(){
+ if(!state.photo||ocrBusy)return;ocrBusy=true;const session=++ocrSession,noteId=state.id;let worker=null,timer=null,expired=false;renderPhoto();$('ocr-status').textContent='文字認識を準備しています。初回は少し時間がかかります。';
+ try{const result=await Promise.race([(async()=>{const T=await loadOCR();if(expired)throw new Error('expired');worker=await T.createWorker(['eng','jpn'],1,{logger:m=>{if(session!==ocrSession||expired)return;const map={'loading tesseract core':'文字認識エンジンを準備中','initializing tesseract':'文字認識を初期化中','loading language traineddata':'日本語・英語を準備中','initializing api':'文字認識を準備中','recognizing text':'写真の文字を読み取り中'};if(map[m.status])$('ocr-status').textContent=map[m.status]+'… '+Math.round((m.progress||0)*100)+'%';}});if(expired){await worker.terminate();throw new Error('expired');}return await worker.recognize(state.photo);})(),new Promise((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(new Error('OCR timeout'));},90000);})]);if(session!==ocrSession||state.id!==noteId)return;state.fields.ocrText=(result.data.text||'').trim().slice(0,12000);$('ocr-text').value=state.fields.ocrText;$('ocr-output').hidden=!state.fields.ocrText;$('ocr-status').textContent=state.fields.ocrText?'読み取った文字を確認してください。銘柄や数値は自動確定していません。':'文字を読み取れませんでした。ラベルを正面から大きく撮るか、銘柄を手入力してください。';const text=norm(state.fields.ocrText),candidates=beers.filter(b=>[b.name,b.alias,...b.name.split(' ')].filter(t=>t.length>=5).some(t=>text.includes(norm(t))));$('ocr-candidates').replaceChildren();if(candidates.length){const title=document.createElement('p');title.className='hint';title.textContent='読み取った文字に関連する登録銘柄：';$('ocr-candidates').appendChild(title);candidates.forEach(b=>$('ocr-candidates').appendChild(beerButton(b)));}change();}
+ catch(e){if(session===ocrSession)$('ocr-status').textContent='文字認識を完了できませんでした。通信を確認して再試行するか、銘柄を手入力してください。写真とテイスティング記録は残っています。';}
+ finally{clearTimeout(timer);expired=true;if(worker){try{await worker.terminate();}catch(e){}}if(session===ocrSession){ocrBusy=false;renderPhoto();}}
 }
-camera.onchange=file;library.onchange=file;
-answerCamera.onchange=e=>{let f=e.target.files&&e.target.files[0];if(!f)return;let r=new FileReader();r.onload=async x=>{photo=x.target.result;recordPic.src=photo;recordPic.classList.remove("hidden");await identifyFromPhoto(photo)};r.readAsDataURL(f)};
-answerLibrary.onchange=e=>{let f=e.target.files&&e.target.files[0];if(!f)return;let r=new FileReader();r.onload=async x=>{photo=x.target.result;recordPic.src=photo;recordPic.classList.remove("hidden");await identifyFromPhoto(photo)};r.readAsDataURL(f)};
-answerQ.oninput=answerCatalog;
-function makePreview(){preview.textContent="【"+(name.value||"名称未入力")+"】\n"+[brewery.value,style.value].filter(Boolean).join(" / ")+"\nABV："+(abv.value||"-")+"%\n\nアロマ："+(selected.aroma.join("、")||"未記録")+"\nフレーバー："+(selected.flavor.join("、")||"未記録")+"\nボディ："+(selected.body[0]||"-")+" / 炭酸："+(selected.carb[0]||"-")+" / アルコール温感："+(selected.warmth[0]||"-")+"\n"+(memo.value?"メモ："+memo.value:"")}
-function save(){makePreview();let x=JSON.parse(localStorage.getItem("beerNotes")||"[]");x.unshift({date:new Date().toISOString(),name:name.value,brewery:brewery.value,style:style.value,abv:abv.value,selected,memo:memo.value,photo,preview:preview.textContent});try{localStorage.setItem("beerNotes",JSON.stringify(x.slice(0,50)));alert("保存しました")}catch(e){alert("写真容量が大きく保存できませんでした。ノート本文は利用できます。")}}
-groupedChips("aromaGroups",aromaGroups,"aroma");
-groupedChips("flavorGroups",flavorGroups,"flavor");
-chips("body",["ライト","ミディアムライト","ミディアム","ミディアムフル","フル"],"body",true);
-chips("carb",["弱い","やや弱い","中程度","やや強い","強い"],"carb",true);
-chips("warmth",["感じない","弱い","中程度","強い","非常に強い"],"warmth",true);
-</script></body></html>
+function init(){
+ const nav=$('step-nav');steps.forEach((label,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="num">${String(i+1).padStart(2,'0')}</span>${esc(label)}`;b.onclick=()=>setStep(i);nav.appendChild(b);});
+ colors.forEach(([label,color])=>{const b=document.createElement('button');b.type='button';b.className='color-chip';b.style.setProperty('--swatch',color);b.dataset.color=label;b.setAttribute('aria-pressed','false');b.innerHTML=`<span class="swatch" aria-hidden="true"></span>${esc(label)}`;b.onclick=()=>{state.fields.color=state.fields.color===label?null:label;$$('button',$('color-picker')).forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.color===state.fields.color)));change();};$('color-picker').appendChild(b);});
+ $$('[data-choice]').forEach(w=>{const key=w.dataset.choice;makeChips(w,choices[key],()=>state.fields[key],v=>state.fields[key]=v);});$$('[data-multi]').forEach(w=>{const key=w.dataset.multi;makeChips(w,multiChoices[key],()=>state.selected[key],v=>state.selected[key]=v,true);});$$('[data-scale]').forEach(w=>{const key=w.dataset.scale;makeScale(w,key,w.dataset.label,()=>state.fields[key],v=>state.fields[key]=v);});
+ renderAroma('aroma-groups','aroma');renderAroma('flavor-groups','flavor');makeChips($('off-status'),[{id:'none',label:'確認して、感じない'},{id:'detected',label:'感じた特徴がある'},{id:'unsure',label:'判断がつかない'}],()=>state.fields.offStatus,v=>{if(v!=='detected'&&state.selected.offs.length){if(!confirm('選択済みの特徴と強度を解除して、確認結果を変更しますか？'))return;state.selected.offs=[];state.offDetails={};syncChips($('off-picker'),[],true);}state.fields.offStatus=v;renderOffDetails();});
+ makeChips($('off-picker'),offTypes,()=>state.selected.offs,v=>{const removed=state.selected.offs.filter(id=>!v.includes(id));removed.forEach(id=>delete state.offDetails[id]);state.selected.offs=v;renderOffDetails();},true);
+ $$('select[data-field]').forEach(s=>{const opts=[['','出所を選択'],['ラベル','ラベル'],['メーカー公表','メーカー公表'],['測定','測定'],['計算値','計算値'],['その他','その他']];opts.forEach(([v,label])=>{const option=document.createElement('option');option.value=v;option.textContent=label;s.appendChild(option);});});
+ $$('[data-field]').forEach(input=>input.addEventListener(input.tagName==='SELECT'?'change':'input',()=>{state.fields[input.dataset.field]=input.value===''?null:input.value;if(input.dataset.field==='name'||input.dataset.field==='style'){const b=beers.find(b=>b.id===state.referenceId);if(!b||state.fields.name!==b.name||state.fields.style!==b.style)state.referenceId=null;}change();}));
+ $('next-btn').onclick=()=>state.step===5?saveNote():setStep(state.step+1);$('prev-btn').onclick=()=>setStep(state.step-1);$('new-btn').onclick=newNote;$('new-note-btn').onclick=newNote;$('side-review').onclick=()=>setStep(5);$('save-btn').onclick=saveNote;$('save-revealed-btn').onclick=saveNote;$('copy-btn').onclick=copyNote;$('export-note-btn').onclick=exportNote;$('reveal-btn').onclick=reveal;$('history-btn').onclick=()=>{if($('history-panel').hidden)openHistory();else closeHistory();};$('close-history').onclick=closeHistory;$('export-all-btn').onclick=()=>{const notes=readNotes();if(notes)downloadJSON({schemaVersion:4,exportedAt:new Date().toISOString(),notes},'beer-tasting-notes-'+new Date().toISOString().slice(0,10)+'.json');};$('catalog-query').oninput=e=>renderCatalog(e.target.value);renderCatalog();$('camera').onchange=attachPhoto;$('photo-library').onchange=attachPhoto;$('ocr-btn').onclick=runOCR;$('remove-photo-btn').onclick=()=>{state.photo='';state.fields.ocrText=null;$('ocr-text').value='';$('ocr-output').hidden=true;$('ocr-status').textContent='';$('ocr-candidates').replaceChildren();renderPhoto();change();};
+ try{const raw=localStorage.getItem(DRAFT_KEY);if(raw){const draft=JSON.parse(raw);if(draft?.schemaVersion!==4)throw new Error('invalid draft');state=normalizeRecord(draft);const notes=readNotes();const saved=notes?.find((n,i)=>normalizeRecord(n,i).id===state.id);dirty=!saved||saved.updatedAt!==state.updatedAt;$('draft-status').textContent=dirty?'前回の下書きを復元':'保存済みの記録';if(saved){$('save-btn').textContent='保存したノートを更新';$('save-revealed-btn').textContent='銘柄情報を含めて更新';}}}catch(e){draftWritable=false;warning('下書きを読み込めませんでした。元のデータは変更していません。今の記録は「保存」またはJSON書き出しで残してください。');}
+ updateHistoryCount();hydrate();window.addEventListener('pagehide',()=>{if(hasContent())persistDraft();});document.addEventListener('visibilitychange',()=>{if(document.hidden&&hasContent())persistDraft();});
+}
+init();
+</script>
+</body>
+</html>
